@@ -1,0 +1,129 @@
+
+nav{
+    background-color: hsl(0, 0%, 0%);
+    font-family: "Silkscreen", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+   
+  
+}
+.container-ul-img-sb{
+    display: none;
+}
+
+body{
+    font-size: 1rem;
+    background-color: hsl(0, 0%, 100%);
+
+}
+
+.link-margin{
+    margin-right: 5px;
+   
+}
+
+.ul-center{
+
+    margin-right: auto;
+    margin-left: auto;
+
+}
+.nav-item {
+    display: flex; 
+    align-items: center; 
+}
+
+.nav-link {
+    display: flex; 
+    align-items: center; 
+   
+
+}
+
+.img-premium {
+    margin-right: 5px; 
+    width: 40px; 
+    height: auto; 
+}
+
+.navbar-nav .nav-item:not(:last-child) {
+    margin-right: 15px; 
+}
+.colsor{
+    color: rgb(255, 252, 252);
+}
+
+.container--img-anime{
+    position: absolute;
+    left: 370px;
+    top: 10px;
+    background-color: white;
+    border-radius: 50% ;
+    border: 1px solid hsl(207, 100%, 50%)    ;
+    -webkit-border-radius: 50% ;
+    -moz-border-radius: 50% ;
+    -ms-border-radius: 50% ;
+    -o-border-radius: 50% ;
+}
+
+
+
+@media (max-width: 1890px)  {
+    .container--img-anime {
+    
+        left: 350px;
+    }
+}
+
+@media (max-width: 1855px)  {
+    .container--img-anime {
+       
+        left: 335px;
+    }
+}
+
+@media (max-width: 1810px)  {
+    .container--img-anime {
+    display: none;
+    }
+}
+
+@media (max-width: 992px) {
+  header{
+        display: flex;
+       
+        align-items: stretch;
+        height: 100vh;
+        width: 50vw;
+    }
+    .nav-item, .nav-link {
+       padding: 15px 0;
+    }
+    .container-ul-img-sb{
+        display: inline-block;
+        position: absolute;
+        opacity:25%;
+        height: auto;
+        max-height: 350px;
+        width: auto;
+        left: 1.3rem;
+        bottom:14em;
+
+    }
+    .collapse navbar-collaps{
+
+        overflow: hidden;
+    }
+   
+
+
+
+}
+@media (max-height:770px){
+
+    .container-ul-img-sb{
+        display: none;
+        
+
+    }
+}
