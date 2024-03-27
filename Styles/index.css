@@ -167,7 +167,7 @@ left: 300px;
  max-height: 355px;
     margin: 0 auto; 
     position: absolute; 
-   
+    overflow: hidden; 
   }
 
   .carousel-item img {
