@@ -18,7 +18,7 @@ body{
 }
 
 .link-margin{
-    margin-right: 4px;
+    margin-right: 5px;
    
 }
 
@@ -31,8 +31,6 @@ body{
 .nav-item {
     display: flex; 
     align-items: center; 
-    position: relative;
-    z-index: 2;
 }
 
 .nav-link {
@@ -58,7 +56,7 @@ body{
 .container--img-anime{
     position: absolute;
     left: 370px;
-    top: 3px;
+    top: 10px;
     background-color: white;
     border-radius: 50% ;
     border: 1px solid hsl(207, 100%, 50%)    ;
@@ -97,13 +95,9 @@ body{
         align-items: stretch;
         height: 100vh;
         width: 50vw;
-        position: relative;
-        z-index: 20;
-        
     }
     .nav-item, .nav-link {
        padding: 15px 0;
-       
     }
     .container-ul-img-sb{
         display: inline-block;
@@ -120,37 +114,9 @@ body{
 
         overflow: hidden;
     }
-    #carouselExampleDark{
- 
-    background-color: aqua;
-    position: fixed;
-    width: 25vw;
-    height: 30vh;
-    bottom: 880px;
-    left: 310px;
-    transform: transslate(-25%, -50%);
-    /*Centrarverticalmente*/z-index: 1;
-    -webkit-transform: transslate(-25%, -50%);
-    -moz-transform: transslate(-25%, -50%);
-    -ms-transform: transslate(-25%, -50%);
-    -o-transform: transslate(-25%, -50%);
-    border: 1px solid hsl(130, 100%, 50%);
-}
-#FooterExample{
+   
 
-margin: 0 auto;
 
-}
-.container__Caroosel{
-border-bottom: 2px solid rgb(255,255,255);
-display: none;
-width: 100vw;
-height: 100px;
-position: absolute;
-bottom: 600px;
-left: 300px;
-
-}
 
 }
 @media (max-height:770px){
@@ -161,6 +127,7 @@ left: 300px;
 
     }
 }
+<<<<<<< HEAD
 #carouselExampleDark {
     max-width: auto; 
     width: 100vw;;
@@ -169,45 +136,15 @@ left: 300px;
     position: absolute; 
     overflow: hidden; 
   }
+=======
+>>>>>>> 9081ba0d1206909352ce99186da0450e78bfa2df
 
-  .carousel-item img {
-    max-width: 100%;
-    height: auto;
-    height: 25%; 
-    width: 50%;
-  }
-
-  /* Agregamos estilos para la línea animada */
-  .linea-animada {
-    position: absolute;
-    bottom: 0;
-    height: 5px; 
-    width: 0; 
-    background-color: red;
-    animation: moverLinea 5s linear infinite;
-  }
-
-  /* Definición de la animación */
-  @keyframes moverLinea {
-    0% { left: 0; width: 0; background-color: red; } /* Inicio de la animación */
-    25% { width: 25%; background-color: green; }
-    50% { width: 50%; background-color: blue; } 
-    75% { width: 75%; background-color: yellow; } 
-    100% { left: 100%; width: 0; background-color: red; } /* Fin de la animación (línea oculta completamente) */
-  }
-
- 
-
-@media (max-height:770px)  {
-    
+/* Estilos que se aplican a las cards y sus atributos*/
+.card-header {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
-.container__Caroosel{
-    border-bottom: 0.5px solid rgb(255,255,255);
-    
-    width: 100vw;
-    height: 100px;
-    position: absolute;
-top: 363px;
-   
-    
-    }
+
+
+/* Final de estilos que se aplican a las cards y sus atributos */
