@@ -82,7 +82,7 @@
 
   <!-- Copyright -->
   <div class="text-center p-4">
-    © 2021 Copyright:
+    © 2024 Copyright:
     <a class="text-reset fw-bold" href="https://mdbootstrap.com/">MDBootstrap.com</a>
   </div>
   <!-- Copyright -->

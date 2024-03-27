@@ -128,4 +128,12 @@ body{
     }
 }
 
+/* Estilos que se aplican a las cards y sus atributos*/
+.card-header {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 
+
+/* Final de estilos que se aplican a las cards y sus atributos */
