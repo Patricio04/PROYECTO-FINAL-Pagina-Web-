@@ -1,4 +1,3 @@
-
 nav{
     background-color: hsl(0, 0%, 0%);
     font-family: "Silkscreen", sans-serif;
@@ -7,6 +6,106 @@ nav{
    
   
 }
+.card {
+    transition: transform 0.3s ease;
+    color: red;
+}
+
+/* Define el efecto de agrandamiento al pasar el cursor */
+.card:hover {
+    transform: scale(1.05);
+}
+.album {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+.card {
+    background-color: hsl(0, 0%, 95%);
+    border: none;
+    border-radius: 10px;
+}
+.badge {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: white; 
+    background-color: #000000; 
+    border-color: #007bff; 
+}
+
+.card:hover {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    -webkit-transition: box-shadow 0.3s ease;
+    -moz-transition: box-shadow 0.3s ease;
+    -ms-transition: box-shadow 0.3s ease;
+    -o-transition: box-shadow 0.3s ease;
+}
+/* Estilos para el icono de visualizaciones */
+.text-body-secondary {
+    font-size: 1rem;
+    background-color: #000000;
+    width: 3.5vw;
+    height: 4vh;;
+    text-align: center;
+    color: #007bff;
+   font-weight: bold;
+    margin-right: 5px;
+   border-radius: 15px ;
+  
+    
+}
+.text-body-secondary .fa-eye {
+    color: #007bff; 
+    margin-right: 0.5rem; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card-header {
+    background-color: hsl(0, 0%, 1%);
+    padding: 0.75rem;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-family: "Honk", system-ui;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+      "MORF" 15,
+      "SHLN" 50;
+  font-size: 1.6rem;
+  font-style: normal;
+}
+
+.card-text {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: aqua;
+    font-family: "Alfa Slab One", serif;
+    font-size: 0.8rem;
+  font-style: normal;
+}
+
+.btn-outline-light {
+    
+    color: hsl(93, 100%, 50%);
+    border-color: hsl(0, 0%, 80%);
+}
+
+.btn-outline-light:hover {
+    background-color: hsl(0, 0%, 80%);
+}
+
+.text-body-secondary {
+    
+    color: hsl(0, 100%, 48%);
+}
+
+.text-muted {
+    color: hsl(0, 100%, 49%);
+}
+
 .container-ul-img-sb{
     display: none;
 }
@@ -87,38 +186,97 @@ body{
     display: none;
     }
 }
-
 @media (max-width: 992px) {
-  header{
-        display: flex;
-       
+   .header-est {
+    
         align-items: stretch;
-        height: 100vh;
+        height: 100%;
+        width: 100vw;
+        position: fixed;
+        top: 0;
+        right:  0;
         width: 50vw;
+        height: 100vh;
+        z-index: 1000;
+  
     }
-    .nav-item, .nav-link {
-       padding: 15px 0;
+
+    .nav-item,
+    .nav-link {
+        padding: 15px 0;
+        position:relative;
+        z-index:5000 ;
     }
-    .container-ul-img-sb{
+
+    .container-ul-img-sb {
         display: inline-block;
         position: absolute;
-        opacity:25%;
+        opacity: 25%;
         height: auto;
         max-height: 350px;
         width: auto;
         left: 1.3rem;
-        bottom:14em;
-
+        bottom: 14em;
     }
-    .collapse navbar-collaps{
 
+    .collapse.navbar-collaps {
         overflow: hidden;
     }
-   
 
+    .title-container,
+    .card-img-top,
+    .card-body,
+    .badge,
+    .btn-group,
+    .text-body-secondary {
+        padding: 0.5rem;
+    }
 
+    .title-container h5 {
+        font-size: 1.2rem;
+    }
 
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .badge {
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-group {
+        margin-bottom: 0.5rem;
+    }
+
+    .text-body-secondary {
+        font-size: 0.8rem;
+    }
+
+    main {
+        margin-top: 56px;
+        margin-left: 50vw;
+        padding-top: 56px;
+        position: relative;
+    }
+
+    footer {
+      
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 56px;
+        z-index: 1000;
+    }
 }
+
+
+
 @media (max-height:770px){
 
     .container-ul-img-sb{
@@ -127,7 +285,6 @@ body{
 
     }
 }
-<<<<<<< HEAD
 #carouselExampleDark {
     max-width: auto; 
     width: 100vw;;
@@ -136,8 +293,6 @@ body{
     position: absolute; 
     overflow: hidden; 
   }
-=======
->>>>>>> 9081ba0d1206909352ce99186da0450e78bfa2df
 
 /* Estilos que se aplican a las cards y sus atributos*/
 .card-header {
@@ -145,6 +300,3 @@ body{
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-
-
-/* Final de estilos que se aplican a las cards y sus atributos */
