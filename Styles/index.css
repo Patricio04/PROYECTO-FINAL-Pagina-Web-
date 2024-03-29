@@ -6,9 +6,14 @@ nav{
    
   
 }
+
+.card.shadow-sm.position-relative {
+    max-width: 350px; /* Ancho máximo de la tarjeta */
+}
 .card {
     transition: transform 0.3s ease;
     color: red;
+
 }
 
 /* Define el efecto de agrandamiento al pasar el cursor */
@@ -24,6 +29,7 @@ nav{
     background-color: hsl(0, 0%, 95%);
     border: none;
     border-radius: 10px;
+
 }
 .badge {
     margin-right: 0.5rem;
@@ -110,6 +116,13 @@ nav{
     display: none;
 }
 
+.serp{
+ margin-left: auto;
+ margin-right: auto;
+margin-top: 400px;
+
+}
+
 body{
     font-size: 1rem;
     background-color: hsl(0, 0%, 50%);
@@ -190,13 +203,12 @@ body{
    .header-est {
     
         align-items: stretch;
-        height: 100%;
-        width: 100vw;
+       
         position: fixed;
         top: 0;
         right:  0;
-        width: 50vw;
-        height: 100vh;
+        width: 37vw;
+        height: 20vh;
         z-index: 1000;
   
     }
@@ -273,7 +285,49 @@ body{
         height: 56px;
         z-index: 1000;
     }
+
+    .container-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .carousel-wrapper {
+        order: 2; /* Cambiar el orden del carrusel para que aparezca después en dispositivos móviles */
+    }
+
+
+    
+.container-wrapper {
+    display: flex;
 }
+
+.manga-section {
+    flex: 1; /* La sección de mangas ocupa el espacio restante */
+    margin-left: 20px; /* Ajusta el margen para separar el carrusel de la sección de mangas */
+}
+
+.container-fluidd{
+    position: sticky;
+    bottom: 100px;
+   
+}
+.navbar-toggler{
+
+    position: sticky;
+    z-index: 9997;
+ 
+
+}
+.carousel-control-next{
+
+}
+
+
+}
+
+
+    
+
 
 
 
