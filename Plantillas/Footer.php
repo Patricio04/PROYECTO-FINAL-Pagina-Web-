@@ -83,7 +83,7 @@
   <!-- Copyright -->
   <div class="text-center p-4">
     © 2024 Copyright:
-    <a class="text-reset fw-bold" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+    <a class="text-reset fw-bold" href="#">MDBootstrap.com</a>
   </div>
   <!-- Copyright -->
 </footer>

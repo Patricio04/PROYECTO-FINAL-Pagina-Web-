@@ -27,7 +27,7 @@
 
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-light">Comenzar a leer</button>
+                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="updateVisualizationCount()">Comenzar a leer</button>
 
                                 </div>
                                 <small class="text-body-secondary" id="visualizations">
