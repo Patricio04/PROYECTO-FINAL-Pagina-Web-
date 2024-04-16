@@ -1,0 +1,13 @@
+td {
+    /* Propiedad para acortar el texto */
+    text-overflow: ellipsis;
+    /* Propiedad para mostrar todo el contenido */
+    white-space: nowrap;
+    /* Propiedad para ocultar el contenido que desborda */
+    overflow: hidden;
+    max-width: 200px;
+}
+
+.portada-imagen {
+    max-width: 10%;
+}
