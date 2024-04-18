@@ -64,7 +64,7 @@ session_start();
                         <li class="nav-item dropdown ">
                             <a class="nav-link dropdown-toggle link-light " href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                Generos
+                                Categorias
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#">Action</a></li>

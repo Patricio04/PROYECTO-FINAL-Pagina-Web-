@@ -19,27 +19,19 @@
 // archivo de conexion a la BD
 require '../Assets/Bases de datos/db.php';
 
-// Consulta SQL para obtener los datos de la tabla "mangas"
-$sql = "SELECT * FROM `mangas`;";
-
-// Ejecutar la consulta
+// Consulta SQL para seleccionar todas las etiquetas
+$sql = "SELECT nombre_etiqueta FROM etiquetas";
 $resultado = $conn->query($sql);
 
-// Verificar si hay resultados
+// Comprueba si hay resultados y guarda los nombres de las etiquetas en un array
+$etiquetas = array();
 if ($resultado->num_rows > 0) {
-    // Crear un array para almacenar los datos de los mangas
-    $mangas = array();
-
-    // Recorrer los resultados y guardarlos en el array
     while ($fila = $resultado->fetch_assoc()) {
-        $mangas[] = $fila;
+        $etiquetas[] = $fila["nombre_etiqueta"];
     }
 } else {
-    // Si no hay resultados, mostrar un mensaje
-    echo "<p>No se encontraron mangas.</p>";
+    echo "No se encontraron etiquetas.";
 }
-
-// Cerrar la conexión
 $conn->close();
 ?>
 
@@ -98,84 +90,69 @@ $conn->close();
             </div>
         </div>
     </nav>
-    <!-- Contenedor de la tabla -->
-    <div class="container mt-5">
 
-        <div class="row justify-content-end">
-            <div class="row align-items-md-stretch text-center">
-                <div class="col-md-12">
-                    <div class="h-100 p-5 text-white bg-dark border rounded-3">
-                        <h2>Gestion de mangas</h2>
-                        <hr>
-                        <p>
-
-                        </p>
-
-                        <a class="btn btn-outline-primary " type="button" href="../Administrador/Gestion de mangas formulario.php"> <i class="fa-solid fa-square-plus fa-xl m-2"></i>Agregar nuevo manga</a>
-                    </div>
-                </div>
-
+    <!-- Formulario para agregar mangas -->
+    <form class="row needs-validation p-5 h-100 m-5 text-white bg-dark border rounded-3" novalidate>
+        <div class="col-md-4">
+            <label for="validationCustom01" class="form-label">
+                <h5>Titulo</h5>
+            </label>
+            <input type="text" class="form-control" id="txttitulo" value="" required placeholder="Ingresar titulo del manga (Max. 255 caracteres)">
+            <div class="valid-feedback">
+                Bien!
             </div>
-
         </div>
-
-        <div class="row justify-content-center mt-5 mb-5 ">
-
-            <div class="col-md-12 ">
-                <div class="table-responsive h-100 p-5 text-white bg-dark border rounded-3 overflow-auto">
-                    <table class="table table-hover table-striped ">
-                        <thead>
-                            <caption>
-
-                            </caption>
-                            <tr>
-                                <th scope="col " class="align-middle text-center">ID_Manga</th>
-                                <th scope="col " class="align-middle text-center">Titulo</th>
-                                <th scope="col " class="align-middle text-center">Descripcion</th>
-                                <th scope="col " class="align-middle text-center">Portada</th>
-                                <th scope="col " class="align-middle text-center">Registro</th>
-                            </tr>
-                        </thead>
-                        <?php foreach ($mangas as $manga) { ?><!-- Iteramos con un foreach para generar rows de la tabla cada que haya un manga dentro de la base de datos-->
-                            <tr id="manga-<?php echo $manga['id_manga']; ?>" class="table-primary">
-                                <th scope="row" class="align-middle text-center"><?php echo $manga['id_manga']; ?></th>
-                                <td class="align-middle text-center"><?php echo $manga['titulo']; ?></td>
-                                <td class="align-middle text-center"><?php echo $manga['descripcion']; ?></td>
-                                <td class="align-middle text-center"><img src="<?php echo $manga['portada']; ?>" alt="Portada del manga" class="portada-imagen"></td>
-                                <td class="align-middle text-center">
-                                    <a href="" class="text-white">
-                                        <i class="fa-solid fa-pen-to-square fa-xl m-3"></i>
-                                    </a>
-                                    <a href="" class="text-white ancoreborrar" data-id="<?php echo $manga['id_manga']; ?>">
-                                        <i class="fa-solid fa-trash fa-lg m-3"></i>
-                                    </a>
-                                </td>
-                            </tr>
-
-                        <?php } ?>
-                    </table>
-                </div>
+        <div class="col-md-4">
+            <label for="validationCustom02" class="form-label">
+                <h5>Portada</h5>
+            </label>
+            <input type="text" class="form-control" id="txtportada" value="" required placeholder="Ingresar enlace de la portada">
+            <small class="form-text text-muted">Por favor revisar la nube -> <a href=""><i class="fa-solid fa-cloud-arrow-up"></i></a></small>
+        </div>
+        <div class="col-md-4">
+            <label for="validationCustom04" class="form-label">
+                <h5>Etiquetas</h5>
+            </label>
+            <select class="form-select" required id="etiquetasopciones">
+                <option selected disabled value="">Opciones...</option>
+                <?php // itera sobre el array etiquetas y genera una option por cada etiqueta existente
+                foreach ($etiquetas as $etiqueta) {
+                    echo '<option value="' . $etiqueta . '">' . $etiqueta . '</option>';
+                }
+                ?>
+                
+            </select>
+            <div class="invalid-feedback">
+                Please select a valid state.
             </div>
-
+        </div>
+        <div class="col-md-6">
+            <label for="exampleTextarea" class="form-label mt-4">
+                <h5>Descripción</h5>
+            </label>
+            <textarea class="form-control" id="txtareadescripcion" rows="3" placeholder="Indique la trama del manga (max. 1000 caracteres)"></textarea>
+            <div class="invalid-feedback">
+                Por favor coloque una descripción
+            </div>
         </div>
 
 
+        <div class="col-12">
+            falta decidir si colocar aqui el formulario de los capitulos y el contenido_capitulos o separarlos (ya que si no hay un manga creado antes no pueden existir capitulos, y sin capitulos no pueden existir contenido de capitulos)
+        </div>
+        <div class="col-12 mt-5">
+            <button class="btn btn-primary" type="submit">Submit form</button>
+        </div>
+    </form>
 
 
 
-    </div>
-
-
-
-
-    
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://kit.fontawesome.com/9319846bc5.js" crossorigin="anonymous"></script>
+
     <script src="../Scrips/Animaciones-Administrador/Administrador.js"></script>
-    
-    
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 
 </body>
 

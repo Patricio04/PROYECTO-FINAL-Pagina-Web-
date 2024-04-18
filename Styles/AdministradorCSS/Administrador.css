@@ -9,5 +9,7 @@ td {
 }
 
 .portada-imagen {
+    /*Tamaño de la imagen dentro de la tabla del 10% */
     max-width: 10%;
 }
+
