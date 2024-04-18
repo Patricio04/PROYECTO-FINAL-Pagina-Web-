@@ -9,9 +9,9 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tatsu</title>
 
-    <link rel="Stylesheet" href="Styles/bootstrap.min.css" />
-    <link rel="Stylesheet" href="Styles/normalize.css" />
-    <link rel="Stylesheet" href="Styles/index.css" />
+    <link rel="Stylesheet" href="../Styles/bootstrap.min.css" />
+    <link rel="Stylesheet" href="../Styles/normalize.css" />
+    <link rel="Stylesheet" href="../Styles/index.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -50,7 +50,7 @@ session_start();
                             <a class="nav-link link-light" href="#">Directorio de Mangas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link link-margin link-light" href="Plantillas\Premium.php">Premium
+                            <a class="nav-link link-margin link-light" href="#">Premium
                                 <img class="img-premium nav-link" src="./Img/Diamante.png" alt="LogoPremium">
                             </a>
                         </li>
@@ -85,6 +85,43 @@ session_start();
             </div>
         </nav>
     </header>
+
+
+    <!-- Apartado Premium -->
+<div class="row justify-content-center py-5">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                Titulo de la card
+                </h5>
+                <p class="card-text">
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum numquam esse voluptas vero dolor! Vero saepe commodi beatae quibusdam repellendus? Hic et fuga tenetur itaque ducimus facilis commodi libero laborum.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque voluptates et distinctio vitae maxime totam quaerat! Neque nulla, asperiores qui reprehenderit officiis, nemo ipsam illum quam illo autem, quae dolorum.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                Titulo de la card
+                </h5>
+                <p class="card-text">
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum numquam esse voluptas vero dolor! Vero saepe commodi beatae quibusdam repellendus? Hic et fuga tenetur itaque ducimus facilis commodi libero laborum.
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Molestias deleniti, eius facere saepe sunt neque voluptatem ut laborum incidunt ipsum asperiores, exercitationem doloremque porro quibusdam similique. Aliquid, laboriosam. Maxime, consequuntur?
+                </p>
+                <a href="#" class="btn btn-primary">Ejemplo</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
 
     
 
