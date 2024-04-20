@@ -334,3 +334,18 @@ template {
 [hidden] {
   display: none;
 }
+
+
+/* Apartado Premium */
+h5.cardsPremium {
+  color: blueviolet;
+  text-align: center;
+}
+
+ul li{
+  color: blueviolet;
+}
+
+div.card-body p{
+  color: black;
+}
