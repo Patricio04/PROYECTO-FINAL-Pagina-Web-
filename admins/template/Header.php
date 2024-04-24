@@ -1,6 +1,3 @@
-<?php ob_start();
-session_start();
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,11 +5,16 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tatsu</title>
-    <link rel="Stylesheet" href="../Styles/normalize.css" />
-    <link rel="Stylesheet" href="../Styles/bootstrap.min.css" />
-    <link rel="stylesheet" href="../Styles/index.css">
+    <link rel="Stylesheet" href="./Styles/index.css" />
+    <link rel="Stylesheet" href="./style/style.css" />
+    <link rel="Stylesheet" href="./Styles/bootstrap.min.css" />
+    <link rel="Stylesheet" href="./Styles/normalize.css" />
+   
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Honk&family=Rubik+Glitch+Pop&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Rubik+Glitch+Pop&display=swap" rel="stylesheet">
@@ -20,6 +22,7 @@ session_start();
     <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 
 </head>
+
 
 
 <body>
@@ -30,7 +33,7 @@ session_start();
         <nav class="navbar navbar-expand-lg navbar-light  header estetic">
             <div class="container-fluid">
                 <a class="navbar-brand  link-light" href="<?php echo $url;?>"> <!-- Al dar clic a Tatsu se redirecciona a la página principal del proyecto que vendría siendo la siguiente POR EL MOMENTO: "http://localhost/PROYECTO-FINAL-Pagina-Web-" -->
-                    <img src="../Img/noto-v1_tornado.png" alt="Tatsu logo">Tatsu
+                <img src="./Img/noto-v1_tornado.png" alt="Tatsu logo">Tatsu
                     <img class="container--img-anime" width="64" height="64"
                         src="https://img.icons8.com/nolan/64/kuromi.png" alt="kuromi" />
                 </a>
@@ -46,31 +49,42 @@ session_start();
                             <a class="nav-link link-light" href="#">Directorio de Mangas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link link-margin link-light" href="Plantillas\Premium.php">Premium
-                                <img class="img-premium nav-link" src="../Img/Diamante.png" alt="LogoPremium">
+                            <a class="nav-link link-margin link-light" href="#">Premium
+                                <img class="img-premium nav-link" src="./Img/Diamante.png" alt="LogoPremium">
                             </a>
                         </li>
                         <li class="nav-item tm">
                             <a class="nav-link link-red link-light  " href="#">Favoritos</a>
                         </li>
+
+                      
                         <li class="nav-item">
-                            <a class="nav-link link-light " href="Usuario/Mi cuenta.php">Usuario</a>
+                            <a class="nav-link link-light " href="./Usuario/login.php">Usuario</a>
                         </li>
 
                         <li class="nav-item dropdown ">
                             <a class="nav-link dropdown-toggle link-light " href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                Categorias
+                                Generos
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
+                            <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Géneros
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <select id="generos" class="form-control" multiple>
+            <option value="accion">Acción</option>
+            <option value="comedia">Comedia</option>
+            <option value="drama">Drama</option>
+            <!-- Otros géneros -->
+        </select>
+        <li><a class="dropdown-item" href="#">Something else here</a></li>
+        
+    </ul>
+    <li class="nav-item tm">
+                            <a class="nav-link link-red link-light  " href="http://localhost/SitioWeb/PROYECTO-FINAL/admins/login.php">Biblioteca</a>
                         </li>
+</li>
 
                     </ul>
                     <form class="d-flex" role="search">
@@ -81,6 +95,3 @@ session_start();
             </div>
         </nav>
     </header>
-
-    
-

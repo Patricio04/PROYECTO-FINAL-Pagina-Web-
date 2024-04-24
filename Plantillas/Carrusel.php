@@ -1,4 +1,5 @@
-<div class="container-fluidd">
+<section class="carrusel-mangas">
+<div class="container-fluidd ">
         <div class="row">
             <!-- Columna para el carrusel -->
             <div class="col-lg-6">
@@ -24,3 +25,7 @@
                     </button>
                 </div>
             </div>
+            <?php
+include './Plantillas/Cards.php';
+?>
+            </section>

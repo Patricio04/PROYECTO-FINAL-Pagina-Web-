@@ -7,6 +7,13 @@ nav{
   
 }
 
+.carrusel-mangas{
+
+   display: grid;
+   grid-template-columns: minmax(100px,1fr)  ;
+   
+}
+
 .card.shadow-sm.position-relative {
     max-width: 350px; /* Ancho máximo de la tarjeta */
 }

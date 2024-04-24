@@ -1,4 +1,3 @@
-<!-- Footer -->
 <footer class="text-center text-lg-start  text-muted" id="Footer">
 
 
@@ -87,11 +86,14 @@
   </div>
   <!-- Copyright -->
 </footer>
-<!-- Footer --> <!-- https://kit.fontawesome.com/9319846bc5.js, nos permite traer iconos con una clase en lugar de guardarlos como imagenes -->
-<script src="https://kit.fontawesome.com/9319846bc5.js" crossorigin="anonymous"></script> 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="../Scrips/biblioteca.js"></script>
+<!-- Footer -->
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script  src="./Scrips/Estetica.js" ></script>
 </body>
 
 </html>

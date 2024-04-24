@@ -1,5 +1,5 @@
 
-<main class="serp">
+<main class="serp ">
  
     <div class="album py-5 bg-body-primary">
         <div class="container">

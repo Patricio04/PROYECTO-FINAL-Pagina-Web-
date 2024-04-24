@@ -1,0 +1,44 @@
+.container_login {
+    display: grid;
+    margin: 0 auto;
+    background-color: azure;
+    width: 100%;
+    height: 50%;
+    padding: 4%;
+    max-width: 1000px;
+    border: 5px solid hsl(0, 0%, 100%);
+    border-radius: 15px;
+    grid-template-columns: 1fr auto; /* Primera columna ocupa 1 fracción, segunda columna ocupa el espacio restante */
+    align-items: center; /* Centra verticalmente los elementos */
+    overflow: hidden;
+}
+
+.container_login--form {
+    border: 2px solid #00ff56;
+    border-radius: 20px; /* Ajusta el radio de borde según sea necesario */
+    color: #ffff00;
+    background-color: #000000;
+    border-color: #ff00ff;
+    height: 100%; /* Ocupa toda la altura del contenedor */
+    max-width: 70%; /* Ocupa el 70% del ancho del contenedor */
+    padding: 20px; /* Ajusta el relleno según sea necesario */
+}
+
+.container-sign {
+    display: flex;
+    position: relative;
+    left: 150px;
+    flex-direction: column; /* Asegura que el contenido se coloque en una columna */
+    justify-content: center; /* Centra verticalmente el contenido */
+    align-items: center; /* Centra horizontalmente el contenido */
+    background-color: #692ef3;
+    border-radius: 50px; /* Ajusta el radio de borde según sea necesario */
+    color: white; /* Ajusta el color del texto según sea necesario */
+    padding: 20px; /* Ajusta el relleno según sea necesario */
+    position: relative; /* Establece la posición relativa */
+    margin-left: -25%; /* Mueve el contenedor hacia la izquierda para que sobresalga */
+    margin-right: -25%; /* Mueve el contenedor hacia la derecha para que sobresalga */
+    width: 150%;
+    height:  153%; /* Aumenta el ancho para que ocupe más espacio */
+    order: 1;
+}
