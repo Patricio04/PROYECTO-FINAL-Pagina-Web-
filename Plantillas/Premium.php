@@ -36,10 +36,8 @@ session_start();
         <nav class="navbar navbar-expand-lg navbar-light  header estetic">
             <div class="container-fluid">
                 <a class="navbar-brand  link-light" href="<?php echo $url;?>"> <!-- Al dar clic a Tatsu se redirecciona a la página principal del proyecto que vendría siendo la siguiente POR EL MOMENTO: "http://localhost/PROYECTO-FINAL-Pagina-Web-" -->
-                    <img src="./Img/noto-v1_tornado.png" alt="Tatsu logo">Tatsu
-                    <img class="container--img-anime" width="64" height="64"
-                        src="https://img.icons8.com/nolan/64/kuromi.png" alt="kuromi" />
-                </a>
+                    <img src="../Img/noto-v1_tornado.png" alt="Tatsu logo">Tatsu
+                
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +51,7 @@ session_start();
                         </li>
                         <li class="nav-item">
                             <a class="nav-link link-margin link-light" href="../Plantillas\Premium.php">Premium
-                                <img class="img-premium nav-link" src="./Img/Diamante.png" alt="LogoPremium">
+                                <img class="img-premium nav-link" src="../Img/Diamante.png" alt="LogoPremium">
                             </a>
                         </li>
                         <li class="nav-item tm">
@@ -81,7 +79,7 @@ session_start();
                     </ul>
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-light" type="submit">Search</button>
+                        <button class=" btn-outline-light searchh" type="submit">Search</button>
                     </form>
                 </div>
             </div>
@@ -89,45 +87,41 @@ session_start();
     </header>
 
 
-    <!-- Apartado Premium -->
-    <div class="row justify-content-center py-5">
-        <div class="col-5">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title cardsPremium">
-                    Plan Normal
-                    </h5>
-                    <p class="card-text">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum numquam esse voluptas vero dolor! Vero saepe commodi beatae quibusdam repellendus? Hic et fuga tenetur itaque ducimus facilis commodi libero laborum.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque voluptates et distinctio vitae maxime totam quaerat! Neque nulla, asperiores qui reprehenderit officiis, nemo ipsam illum quam illo autem, quae dolorum.
-                    </p>
-                </div>
-            </div>
+   <!-- Apartado Premium -->
+<div class="container">
+    <div class="plan-container">
+        <div class="plan">
+            <h3 class="animated-title">Plan Novato</h3>
+            <div class="cat-animation"></div> <!-- Aquí se inserta la animación del gatito -->
+            <div class="price">$5/mes</div>
+            <ul class="features">
+                <li>Acceso básico a funciones</li>
+                <li>Soporte estándar</li>
+                <li>Actualizaciones mensuales</li>
+                <li>Foro de comunidad exclusivo</li>
+            </ul>
+            <button class="btn btn-primary">
+                <i class="fas fa-shopping-cart"></i> Suscribirse
+            </button>
+            <div class="btn-bg"></div>
         </div>
 
-        <div class="col-5">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title cardsPremium">
-                    Plan Premium
-                    </h5>
-                    <p class="card-text">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum numquam esse voluptas vero dolor! Vero saepe commodi beatae quibusdam repellendus? Hic et fuga tenetur itaque ducimus facilis commodi libero laborum.
-                        <ul>
-                            <li>1</li>
-                            <li>2</li>
-                            <li>3</li>
-                            <li>4</li>
-                            <li>5</li>
-                            <li>6</li>
-                        </ul>
-                    </p>
-                    <a href="#" class="btn btn-primary">Comprar Premium</a>
-                </div>
-            </div>
+        <div class="plan">
+            <h3 class="animated-title">Plan Premium</h3>
+            <div class="price">$10/mes</div>
+            <ul class="features">
+                <li>Acceso completo a todas las funciones</li>
+                <li>Soporte prioritario 24/7</li>
+                <li>Contenido exclusivo y adelantos</li>
+                <li>Descuentos en eventos y productos</li>
+            </ul>
+            <button class="btn btn-primary">
+                <i class="fas fa-shopping-cart"></i> Suscribirse
+            </button>
+            <div class="btn-bg"></div>
         </div>
-
     </div>
+</div>
 
     <?php
  include '../Plantillas/Footer.php';    

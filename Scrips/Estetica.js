@@ -1,33 +1,36 @@
+console.log("log")
 
+const container = document.getElementById('containerr');
+const registerBtn = document.getElementById('register');
+const loginBtn = document.getElementById('login');
 
-function expandHeader() {
-    var header = document.querySelector('.header');
-    var navbarCollapse = document.querySelector('.navbar-collapse');
-    if (navbarCollapse.classList.contains('show')) {
-        header.classList.add('expanded');
-    } else {
-        header.classList.remove('expanded');
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    var toggler = document.querySelector('.navbar-toggler');
-    toggler.addEventListener('click', function() {
-        expandHeader();
-    });
+registerBtn.addEventListener('click', () => {
+    container.classList.add("active");
 });
 
-// Obtener el elemento donde se mostrará el número de visualizaciones
-var visualizationCountElement = document.getElementById('visualizationCount');
+loginBtn.addEventListener('click', () => {
+    container.classList.remove("active");
+});
 
-// Simular el conteo de visualizaciones
-var visualizationCount = 0;
 
-// Función para actualizar el número de visualizaciones
-function updateVisualizationCount() {
-    visualizationCount++;
-    visualizationCountElement.textContent = visualizationCount;
+
+const botones = document.getElementsByClassName(`prueba`);
+
+// Itera sobre todos los elementos con la clase `prueba`
+for (let i = 0; i < botones.length; i++) {
+    // Agrega un listener de evento a cada botón
+    botones[i].addEventListener(`click`, () => {
+        alert(`Funciona`);
+    });
 }
 
-// Llamar a la función de actualización cuando la página se cargue
-window.addEventListener('load', updateVisualizationCount)
+
+ // Función para cerrar la alerta
+ function closeAlert() {
+    document.querySelector('.dark-overlay').style.display = 'none';
+}
+
+// Mostrar la alerta al cargar la página (solo si se muestra)
+window.onload = function() {
+    document.querySelector('.dark-overlay').style.display = 'flex';
+};

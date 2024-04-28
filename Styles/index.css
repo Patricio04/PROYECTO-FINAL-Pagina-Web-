@@ -6,7 +6,215 @@ nav{
    
   
 }
+body{
+    font-size: 1rem;
+    background-color: hsl(0, 0%, 50%);
 
+}
+
+/* Estilo para Pagina Premium*/
+
+.plan-container {
+    position: relative;
+    top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    font-family: 'Arial', sans-serif;
+    
+}
+
+.plan {
+    border: 2px solid #00ffea;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    background-color: #1e1e1e;
+    box-shadow: 0 0 20px rgba(0, 255, 234, 0.5);
+    animation: fadeInDown 1s ease;
+}
+
+.plan h3 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.plan .price {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #00ffea;
+}
+
+.plan .features {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.plan .features li {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.plan .btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.price {
+    font-size: 32px;
+    font-weight: bold;
+    color: #00ffea;
+    margin-bottom: 20px;
+}
+
+.features {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.features li {
+    position: relative;
+    padding-left: 30px;
+}
+
+.features li:before {
+    content: "\f058";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #00ffea;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative;
+    overflow: hidden;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn i {
+    margin-right: 5px;
+}
+.btn-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 123, 255, 0.5);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s;
+}
+
+.plan .btn:hover {
+    background-color: #0056b3;
+}
+
+.animated-title {
+    animation: bounce 1s infinite alternate; /* Aplica la animación "bounce" */
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0); /* Sin desplazamiento vertical */
+    }
+    100% {
+        transform: translateY(-10px); /* Desplazamiento hacia arriba */
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cat-container {
+    position: relative;
+    height: 100px; /* Altura del contenedor del gatito */
+}
+
+.cat-animation {
+    width: 100px;
+    height: 100px;
+    background-image: url('gato.png');
+    /*Rutadelaimagendelgatito*/background-size: cover;
+    position: absolute;
+    bottom: 0;
+    /*Posicióninicialdelgatito*/left:15%;
+    /*Centraelgatitohorizontalmente*/transform: translateX(-50%);
+    /*Ajustalaposiciónhorizontal*/animation: catJump 1s infinite alternate;
+    -webkit-animation: catJump 1s infinite alternate;
+}
+
+@keyframes catJump {
+    0% {
+        bottom: 20px; /* Posición inicial del salto */
+    }
+    50% {
+        bottom: 40px; /* Posición máxima del salto */
+    }
+}
+
+
+/* Estilos para la alerta personalizada */
+.custom-alert {
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+    margin-bottom: 15px;
+    border-radius: 10px;
+  }
+  
+  /* Estilos para el botón de cerrar */
+  .closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .closebtn:hover {
+    color: black;
+  }
+  
 .carrusel-mangas{
 
    display: grid;
@@ -102,7 +310,7 @@ nav{
 
 .btn-outline-light {
     
-    color: hsl(93, 100%, 50%);
+    color: hsl(120, 3%, 6%);
     border-color: hsl(0, 0%, 80%);
 }
 
@@ -130,11 +338,6 @@ margin-top: 400px;
 
 }
 
-body{
-    font-size: 1rem;
-    background-color: hsl(0, 0%, 50%);
-
-}
 
 .link-margin{
     margin-right: 5px;
@@ -185,6 +388,7 @@ body{
     -o-border-radius: 50% ;
 }
 
+/* LOGIN */
 
 
 @media (max-width: 1890px)  {
@@ -323,9 +527,6 @@ body{
     position: sticky;
     z-index: 9997;
  
-
-}
-.carousel-control-next{
 
 }
 

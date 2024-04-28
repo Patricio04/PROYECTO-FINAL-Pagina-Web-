@@ -1,3 +1,7 @@
+
+<?php ob_start();
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,16 +9,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tatsu</title>
-    <link rel="Stylesheet" href="./Styles/index.css" />
-    <link rel="Stylesheet" href="./style/style.css" />
+
     <link rel="Stylesheet" href="./Styles/bootstrap.min.css" />
     <link rel="Stylesheet" href="./Styles/normalize.css" />
+    <link rel="Stylesheet" href="./Styles/login.css" />
+    <link rel="Stylesheet" href="./Styles/index.css" />
    
 
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Honk&family=Rubik+Glitch+Pop&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Rubik+Glitch+Pop&display=swap" rel="stylesheet">
@@ -34,8 +38,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand  link-light" href="<?php echo $url;?>"> <!-- Al dar clic a Tatsu se redirecciona a la página principal del proyecto que vendría siendo la siguiente POR EL MOMENTO: "http://localhost/PROYECTO-FINAL-Pagina-Web-" -->
                 <img src="./Img/noto-v1_tornado.png" alt="Tatsu logo">Tatsu
-                    <img class="container--img-anime" width="64" height="64"
-                        src="https://img.icons8.com/nolan/64/kuromi.png" alt="kuromi" />
+                   
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
