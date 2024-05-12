@@ -1,5 +1,5 @@
 <?php
-include 'admins/template/Header.php';
+ include 'Plantillas/Header.php';
  include 'Plantillas/Login.php';
- include 'admins/template/footer.php';
+ include 'Plantillas/Footer.php';
 ?>

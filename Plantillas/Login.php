@@ -1,7 +1,7 @@
 <?php
-require 'Assets/Bases de datos/db.php';
+include 'Assets/Bases de datos/db.php';
 
-// Iniciar la sesión al principio del script
+
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -10,19 +10,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $contraseña = $_POST['txtcontraseña'];
 
     // Buscar el usuario en la base de datos por su correo electrónico
-    $sql = "SELECT id_usuario, contraseña, id_rol FROM usuarios WHERE correo = '$correo'";
+    $sql = "SELECT IdUsuario, Contraseña, IdRol FROM Usuario WHERE Correo = '$correo'";
     $resultado = $conn->query($sql);
 
     if ($resultado->num_rows > 0) {
         // Si se encontró el usuario, verificar la contraseña
         $fila = $resultado->fetch_assoc();
-        if (password_verify($contraseña, $fila['contraseña'])) {
+        if (password_verify($contraseña, $fila['Contraseña'])) {
             // Las credenciales son válidas, establecer una variable de sesión
             session_start();
-            $_SESSION['id_usuario'] = $fila['id_usuario'];
+            $_SESSION['IdUsuario'] = $fila['IdUsuario'];
 
             // Verificar el id_rol del usuario y redirigirlo
-            if ($fila['id_rol'] == 3) {
+            if ($fila['IdRol'] == 3) {
                 header("Location: Administrador/Gestion de mangas.php");
             } else {
                 header("Location: Usuario/Mi%20cuenta.php");
@@ -36,12 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   </div>';
         }
     } else {
-        // Usuario no encontrado
         echo "Usuario no encontrado";
     }
 }
 ?>
- <!-- Aquí comienza la estructura del Formulario de Login -->
+
 
 
 

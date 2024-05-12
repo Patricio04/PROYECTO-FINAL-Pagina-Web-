@@ -1,17 +1,17 @@
 
-
 <?php
-$servername = "localhost";
+$serverName = "localhost"; 
 $username = "root"; 
 $password = ""; 
-$database = "tatsu2"; 
+$database = "tatsudatabase"; 
 
-// Crear una conexión
-$conn = mysqli_connect($servername, $username, $password, $database);
+// Establecer conexión
+$conn = mysqli_connect($serverName, $username, $password, $database);
 
-// Verificar la conexión
+// Verificar conexión
 if (!$conn) {
-    die("Error de conexión: " . mysqli_connect_error());
+    die("Conexión fallida: " . mysqli_connect_error());
 }
-echo "";
+
+echo "Conexión establecida correctamente";
 ?>
