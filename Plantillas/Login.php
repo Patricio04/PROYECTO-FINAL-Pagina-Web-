@@ -1,11 +1,30 @@
 <?php
 include 'Assets/Bases de datos/db.php';
 
-
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener los datos del formulario
+    if ($_POST["formulario"] == "signup") { // REGISTRO //
+
+     
+    $nombre = $_POST['TxtNombre'];
+    $apellido = $_POST['TxtApellido'];
+    $correo = $_POST['TxtCorreo'];
+    $contraseña = $_POST['TxtContraseña'];
+
+    $contraseña_encriptada = password_hash($contraseña, PASSWORD_DEFAULT);
+
+    // IMPORTANTE: IdRol e IdPlan se establecen por defecto con esos valores ya que son los que corresponden a un plan no premium y un rol de no admin. (IdRol:1 = usuario, IdPlan: 1 = basico/gratuito)
+    $sql = "INSERT INTO Usuario (Nombre, Apellido, Correo, IdRol, IdPlan, Contraseña) 
+        VALUES ('$nombre', '$apellido', '$correo', 1, 1, '$contraseña_encriptada')";
+    
+    if ($conn->query($sql) === TRUE) {
+        echo "Registro exitoso";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+
+
+    } elseif ($_POST["formulario"] == "login") { // INICIO DE SESION //
+        
     $correo = $_POST['txtcorreo'];
     $contraseña = $_POST['txtcontraseña'];
 
@@ -22,12 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['IdUsuario'] = $fila['IdUsuario'];
 
             // Verificar el id_rol del usuario y redirigirlo
-            if ($fila['IdRol'] == 3) {
+            if ($fila['IdRol'] == 2) {
                 header("Location: Administrador/Gestion de mangas.php");
             } else {
                 header("Location: Usuario/Mi%20cuenta.php");
             }
-            exit(); // Detener la ejecución del script después de redirigir
+            exit();
         } else {
           
             echo '<div class="custom-alert">
@@ -38,7 +57,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "Usuario no encontrado";
     }
+
+
+    }
 }
+
 ?>
 
 
@@ -47,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Aquí comienza la estructura del Formulario de Login -->
     <div class="containerr" id="containerr">
         <div class="form-container sign-up">
-        <form >
+        <form method="post">
                 <h1>Create Account</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
@@ -56,16 +79,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your email for registeration</span>
-                <input type="text" placeholder="Name">
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
+                <input type="text" placeholder="Nombre(s)" name="TxtNombre">
+                <input type="text" placeholder="Apellido(s)" name="TxtApellido">
+                <input type="email" placeholder="Correo" name="TxtCorreo">
+                <input type="password" placeholder="Contraseña" name="TxtContraseña">
+
+                <input type="hidden" name="formulario" value="signup"> <!-- Este no se muestra, pero sirve para hacer la comprobacion de que formulario es el que se está enviando-->
                 <a href="#">Forget Your Password?</a>
                 <button>Sign In</button>
             </form>
         </div>
         <div class="form-container sign-in">
         <form method="post">
-                <h1>Inicie Sesion</h1>
+                <h1>Iniciar Sesión</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
                     <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
@@ -77,6 +103,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="email" class="form-control" id="floatingEmail" name="txtcorreo" placeholder="nombre@ejemplo.com">
             <label>Contraseña</label>
             <input type="password" class="form-control" id="floatingPassword" name="txtcontraseña" placeholder="Ingrese su contraseña" autocomplete="off">
+
+            <input type="hidden" name="formulario" value="login"><!-- Este no se muestra, pero sirve para hacer la comprobacion de que formulario es el que se está enviando-->
          
             <button type="submit" class="btn btn-outline-primary">Enviar</button>
             </form>
