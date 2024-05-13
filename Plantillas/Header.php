@@ -91,8 +91,8 @@ $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-";
                         </li>
 
                     </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" onkeyup="buscar_ahora($('#Buscar').val());">
                         <button class="btn btn-outline-light" type="submit">Search</button>
                     </form>
                 </div>

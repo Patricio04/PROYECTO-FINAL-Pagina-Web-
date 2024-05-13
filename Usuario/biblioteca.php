@@ -6,36 +6,27 @@ include '../Plantillas/Header.php';
 $sql = "SELECT * FROM Manga";
 $resultado = $conn->query($sql);
 */
-$sql = "SELECT m.IdManga, m.Titulo, m.Portada, m.Descripcion, m.Visualizaciones, e.NombreEtiqueta
-FROM Manga m
-JOIN EtiquetaManga em ON m.IdManga = em.IdManga
-JOIN Etiqueta e ON em.IdEtiqueta = e.IdEtiqueta";
+$sql = "SELECT m.IdManga, m.Titulo, m.Portada, m.Descripcion, m.Visualizaciones, GROUP_CONCAT(e.NombreEtiqueta) AS Etiquetas
+        FROM Manga m
+        LEFT JOIN EtiquetaManga em ON m.IdManga = em.IdManga
+        LEFT JOIN Etiqueta e ON em.IdEtiqueta = e.IdEtiqueta
+        GROUP BY m.IdManga";
+
 $resultado = $conn->query($sql);
 
 if ($resultado->num_rows > 0) {
-    // Crear un array asociativo para almacenar los mangas y sus etiquetas
     $datosmangas = array();
 
-    // Iterar sobre cada fila de resultado
     while ($fila = $resultado->fetch_assoc()) {
-        // Verificar si ya existe una entrada para este manga en el array
-        $idManga = $fila['IdManga'];
-        if (!isset($datosmangas[$idManga])) {
-            // Si no existe, crear una nueva entrada con los datos del manga
-            $datosmangas[$idManga] = array(
-                'id' => $idManga,
-                'titulo' => $fila['Titulo'],
-                'portada' => $fila['Portada'],
-                'descripcion' => $fila['Descripcion'],
-                'visualizaciones' => $fila['Visualizaciones'],
-                'etiquetas' => array() // Crear un subarray para almacenar las etiquetas
-            );
-        }
-
-        // Si este manga tiene una etiqueta asociada, agregarla al array de etiquetas
-        if ($fila['NombreEtiqueta']) {
-            $datosmangas[$idManga]['etiquetas'][] = $fila['NombreEtiqueta'];
-        }
+        $datosmangas[] = array(
+            'id' => $fila['IdManga'],
+            'titulo' => $fila['Titulo'],
+            'portada' => $fila['Portada'],
+            'descripcion' => $fila['Descripcion'],
+            'visualizaciones' => $fila['Visualizaciones'],
+            'etiquetas' => $fila['Etiquetas'] ? explode(',', $fila['Etiquetas']) : array()
+        );
+       // print_r($datosmangas);
     }
 } else {
     echo "<div class='alert alert-dismissible alert-warning' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
@@ -43,7 +34,7 @@ if ($resultado->num_rows > 0) {
     <strong>No se encontraron mangas disponibles</strong></div>";
 }
 
-
+$json_data = json_encode($datosmangas);
 ?>
 
 
@@ -147,7 +138,7 @@ if ($resultado->num_rows > 0) {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="applyFilters()">Aplicar Filtros</button>
+                <button type="button" class="btn btn-primary" id ="BotonFiltrar">Aplicar Filtros</button>
             </div>
         </div>
     </div>
@@ -157,8 +148,3 @@ if ($resultado->num_rows > 0) {
 <?php
 include '../Plantillas/Footer.php';
 ?>
-
-<script>
-
-
-</script>
