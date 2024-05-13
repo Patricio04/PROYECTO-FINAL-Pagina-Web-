@@ -17,9 +17,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         VALUES ('$nombre', '$apellido', '$correo', 1, 1, '$contraseña_encriptada')";
     
     if ($conn->query($sql) === TRUE) {
-        echo "Registro exitoso";
+        echo "<div class='alert alert-dismissible alert-success' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1500;'>
+        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+        <strong>Registro realizado correctamente!</strong></div>";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "<div class='alert alert-dismissible alert-danger' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1500;'>
+        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+        <strong>Error al registrar</strong>, ese correo ya se encuentra en uso</div>";
     }
 
 
@@ -44,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($fila['IdRol'] == 2) {
                 header("Location: Administrador/Gestion de mangas.php");
             } else {
-                header("Location: Usuario/Mi%20cuenta.php");
+                header("Location: Usuario/biblioteca.php");
             }
             exit();
         } else {

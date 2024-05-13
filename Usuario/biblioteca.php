@@ -1,5 +1,49 @@
 <?php
+include '../Assets/Bases de datos/db.php';
 include '../Plantillas/Header.php';
+
+/*
+$sql = "SELECT * FROM Manga";
+$resultado = $conn->query($sql);
+*/
+$sql = "SELECT m.IdManga, m.Titulo, m.Portada, m.Descripcion, m.Visualizaciones, e.NombreEtiqueta
+FROM Manga m
+JOIN EtiquetaManga em ON m.IdManga = em.IdManga
+JOIN Etiqueta e ON em.IdEtiqueta = e.IdEtiqueta";
+$resultado = $conn->query($sql);
+
+if ($resultado->num_rows > 0) {
+    // Crear un array asociativo para almacenar los mangas y sus etiquetas
+    $datosmangas = array();
+
+    // Iterar sobre cada fila de resultado
+    while ($fila = $resultado->fetch_assoc()) {
+        // Verificar si ya existe una entrada para este manga en el array
+        $idManga = $fila['IdManga'];
+        if (!isset($datosmangas[$idManga])) {
+            // Si no existe, crear una nueva entrada con los datos del manga
+            $datosmangas[$idManga] = array(
+                'id' => $idManga,
+                'titulo' => $fila['Titulo'],
+                'portada' => $fila['Portada'],
+                'descripcion' => $fila['Descripcion'],
+                'visualizaciones' => $fila['Visualizaciones'],
+                'etiquetas' => array() // Crear un subarray para almacenar las etiquetas
+            );
+        }
+
+        // Si este manga tiene una etiqueta asociada, agregarla al array de etiquetas
+        if ($fila['NombreEtiqueta']) {
+            $datosmangas[$idManga]['etiquetas'][] = $fila['NombreEtiqueta'];
+        }
+    }
+} else {
+    echo "<div class='alert alert-dismissible alert-warning' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+    <strong>No se encontraron mangas disponibles</strong></div>";
+}
+
+
 ?>
 
 
@@ -8,8 +52,8 @@ include '../Plantillas/Header.php';
 <div class="container">
     <h1 class="my-4">Biblioteca de Mangas</h1>
 
-  <!-- Botones de filtros -->
-  <div class="mb-4" id="filterButtons">
+    <!-- Botones de filtros -->
+    <div class="mb-4" id="filterButtons">
         <!-- Los botones de filtro se generarán dinámicamente aquí -->
     </div>
 
@@ -20,46 +64,52 @@ include '../Plantillas/Header.php';
 
     <!-- Tarjetas de mangas -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        <!-- Aquí puedes agregar tus tarjetas de mangas -->
-        <div class="col">
-                    <div class="card shadow-sm position-relative">
-                        <div class="title-container">
-                            <h5 class="card-header">Título del manga muy largo que se truncaráaaaaaaaaaaaaaaaaaaaaa</h5>
-                        </div>
+        <?php foreach ($datosmangas as $manga) : ?>
+            <!-- Aquí puedes agregar tus tarjetas de mangas -->
+            <div class="col">
+                <div class="card shadow-sm position-relative">
+                    <div class="title-container">
+                        <h5 class="card-header"><?php echo $manga['titulo']; ?></h5>
+                    </div>
 
-                        <img src="https://th.bing.com/th/id/OIP.Q2X6hCBTGyfK8SRVDZNTRgHaLc?rs=1&pid=ImgDetMain" class="card-img-top" alt="Imagen de manga" style="width: 100%; height: 225px;">
-                        <div class="card-body">
-                            <p class="card-text">Esta es una prueba de la descripción que podría tener este manga</p>
+                    <img src="<?php echo $manga['portada']; ?>" class="card-img-top" alt="Imagen de manga" style="width: 100%; height: 225px;">
+                    <div class="card-body">
+                        <p class="card-text"><?php echo $manga['descripcion']; ?></p>
 
-
-                            <span class="badge rounded-pill btn btn-outline-info mb-3">Accion</span>
+                        <?php foreach ($manga['etiquetas'] as $etiqueta) : ?>
+                            <span class="badge rounded-pill btn btn-outline-info mb-3"><?php echo $etiqueta; ?></span>
+                        <?php endforeach; ?>
+                        <!--
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Comedia</span>
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Terror</span>
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Escolar</span>
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Sci-fi</span>
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Psicologico</span>
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Romance</span>
-                            <span class="badge rounded-pill btn btn-outline-info mb-3">Historia</span>
+                            <span class="badge rounded-pill btn btn-outline-info mb-3">Historia</span>  
+                        -->
 
 
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-light">Comenzar a leer</button>
-
-                                </div>
-                                <small class="text-body-secondary" id="visualizations">
-                                    <i class="fas fa-eye"></i> <!-- Icono del ojo -->
-                                    <span id="visualizationCount">0</span>
-                                </small>
-
-
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-light">Comenzar a leer</button>
 
                             </div>
+                            <small class="text-body-secondary" id="visualizations">
+                                <i class="fas fa-eye"></i> <!-- Icono del ojo -->
+                                <span id="visualizationCount"><?php echo $manga['visualizaciones']; ?></span>
+                            </small>
+
+
+
                         </div>
                     </div>
                 </div>
-        <!-- Agrega más tarjetas de mangas según necesites -->
+            </div>
+            <!-- Agrega más tarjetas de mangas según necesites -->
+        <?php endforeach; ?>
     </div>
+
 
     <!-- Paginación -->
     <nav aria-label="Page navigation">
@@ -90,7 +140,7 @@ include '../Plantillas/Header.php';
             <div class="modal-body">
                 <h6>Géneros</h6>
                 <div class="mb-3">
-                    
+
                     <!-- Agrega más géneros según tus necesidades -->
                 </div>
                 <h6>Ordenar por</h6>
@@ -113,4 +163,3 @@ include '../Plantillas/Header.php';
 <?php
 include '../Plantillas/Footer.php';
 ?>
-

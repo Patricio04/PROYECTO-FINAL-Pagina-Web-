@@ -67,7 +67,7 @@ if ($resultado->num_rows > 0) {
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-   
+
     $nombre = $_POST['txtnombre'];
     $apellido = $_POST['txtapellido'];
     $correo = $_POST['txtcorreo'];
@@ -81,14 +81,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ejecutar la consulta
     if ($conn->query($sql) === TRUE) {
         echo "
-  <div class='alert alert-dismissible alert-success' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
-  <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-  <strong>Datos actualizados correctamente!</strong></div>
+        <div class='alert alert-dismissible alert-success' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
+        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+        <strong>Datos actualizados correctamente!</strong></div>
         ";
     } else {
         echo "<div class='alert alert-dismissible alert-danger' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
         <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-        <strong>Ups!algo salió mal: </strong></div>" . $conn->error;
+        <strong>Ups! algo salió mal. </strong></div>";
     }
 }
 
