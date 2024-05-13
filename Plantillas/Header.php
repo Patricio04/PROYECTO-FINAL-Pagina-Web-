@@ -1,4 +1,18 @@
+<?php
+session_start();
+// Verificar si el usuario está autenticado
 
+if (!isset($_SESSION['IdUsuario'])) {
+    // El usuario no ha iniciado sesión, redirigirlo a la página de inicio de sesión
+    header("Location: ../Index.php");
+    exit();
+}
+
+// Si el usuario está autenticado, obtener el ID de usuario de la sesión
+$id_usuario = $_SESSION['IdUsuario'];
+
+ob_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,9 +35,11 @@
 
 
 <body>
-    <?php $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-"?>  <!-- Esto sirve para redireccionar a la carpeta principal del proyecto (por el momento se llama "PROYECTO-FINAL-Pagina-Web-"), ['HTTP_HOST'] sirve para colocar al principio el nombre del host actual (por el momento el host es "localhost"), esto para que si lo llegamos a subir y le cambiamos el nombre al host por algo como "Tatsu.com" ahora este sea el nombre del HOST y no haya inconvenientes con páginas que no se ven porque el direccionamiento está incorrecto-->
 
-    <header class="header-est">
+<?php $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-"; 
+// Esto sirve para redireccionar a la carpeta principal del proyecto (por el momento se llama "PROYECTO-FINAL-Pagina-Web-"), ['HTTP_HOST'] sirve para colocar al principio el nombre del host actual (por el momento el host es "localhost"), esto para que si lo llegamos a subir y le cambiamos el nombre al host por algo como "Tatsu.com" ahora este sea el nombre del HOST y no haya inconvenientes con páginas que no se ven porque el direccionamiento está incorrecto
+?>
+    <div class="header-est">
         <!-- Encabezado de la página -->
         <nav class="navbar navbar-expand-lg navbar-light  header estetic">
             <div class="container-fluid">
@@ -78,7 +94,7 @@
                 </div>
             </div>
         </nav>
-    </header>
+    </div>
 
     
 
