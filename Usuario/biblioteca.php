@@ -66,7 +66,7 @@ if ($resultado->num_rows > 0) {
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <?php foreach ($datosmangas as $manga) : ?>
             <!-- Aquí puedes agregar tus tarjetas de mangas -->
-            <div class="col">
+            <div class="col manga-card" data-etiquetas="<?php echo implode(',', $manga['etiquetas']); ?>">
                 <div class="card shadow-sm position-relative">
                     <div class="title-container">
                         <h5 class="card-header"><?php echo $manga['titulo']; ?></h5>
@@ -141,15 +141,9 @@ if ($resultado->num_rows > 0) {
                 <h6>Géneros</h6>
                 <div class="mb-3">
 
-                    <!-- Agrega más géneros según tus necesidades -->
+                    
                 </div>
-                <h6>Ordenar por</h6>
-                <div class="mb-3">
-                    <select class="form-select" id="orderBy">
-                        <option value="recent">Más recientes</option>
-                        <option value="popular">Más populares</option>
-                    </select>
-                </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -163,3 +157,8 @@ if ($resultado->num_rows > 0) {
 <?php
 include '../Plantillas/Footer.php';
 ?>
+
+<script>
+
+
+</script>

@@ -32,3 +32,8 @@ function loadGenresFromDatabase() {
 
 
 window.onload = loadGenresFromDatabase;
+
+
+
+
+

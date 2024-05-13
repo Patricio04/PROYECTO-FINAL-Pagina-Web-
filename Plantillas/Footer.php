@@ -87,12 +87,21 @@
   </div>
   <!-- Copyright -->
 </footer>
+<?php
+$url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-"; 
+// Esto sirve para redireccionar a la carpeta principal del proyecto (por el momento se llama "PROYECTO-FINAL-Pagina-Web-"), ['HTTP_HOST'] sirve para colocar al principio el nombre del host actual (por el momento el host es "localhost"), esto para que si lo llegamos a subir y le cambiamos el nombre al host por algo como "Tatsu.com" ahora este sea el nombre del HOST y no haya inconvenientes con páginas que no se ven porque el direccionamiento está incorrecto
+
+?>
+
+
 <!-- Footer --> <!-- https://kit.fontawesome.com/9319846bc5.js, nos permite traer iconos con una clase en lugar de guardarlos como imagenes -->
 <script src="https://kit.fontawesome.com/9319846bc5.js" crossorigin="anonymous"></script> 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="../Scrips/biblioteca.js"></script>
-<script  src="./Scrips/Estetica.js" ></script>
+<script src="<?php echo $url . '/Scrips/biblioteca.js';?>"></script>
+<script  src="<?php echo $url . '/Scrips/Estetica.js';?>" ></script>
 </body>
 
 </html>

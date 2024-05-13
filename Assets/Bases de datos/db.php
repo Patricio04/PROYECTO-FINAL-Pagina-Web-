@@ -5,10 +5,8 @@ $username = "root";
 $password = ""; 
 $database = "tatsudatabase"; 
 
-// Establecer conexión
 $conn = mysqli_connect($serverName, $username, $password, $database);
 
-// Verificar conexión
 if (!$conn) {
     die("<div class='alert alert-dismissible alert-danger' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
     <button type='button' class='btn-close' data-bs-dismiss='alert'></button>

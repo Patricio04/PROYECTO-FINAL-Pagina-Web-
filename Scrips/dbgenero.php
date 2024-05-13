@@ -9,7 +9,7 @@ if (!$conn) {
 }
 
 // Consultar los géneros desde la base de datos
-$sql = "SELECT id_etiqueta, nombre_etiqueta FROM etiquetas";
+$sql = "SELECT IdEtiqueta, NombreEtiqueta FROM etiqueta";
 $resultado = mysqli_query($conn, $sql);
 
 // Verificar si se encontraron resultados
@@ -20,8 +20,8 @@ if (mysqli_num_rows($resultado) > 0) {
    
     while ($fila = mysqli_fetch_assoc($resultado)) {
         $genero = array(
-            'id' => $fila['id_etiqueta'],
-            'nombre' => $fila['nombre_etiqueta']
+            'id' => $fila['IdEtiqueta'],
+            'nombre' => $fila['NombreEtiqueta']
         );
         $generos[] = $genero;
     }
