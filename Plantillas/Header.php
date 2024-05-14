@@ -64,7 +64,7 @@ $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-";
                             <a class="nav-link link-light" href="<?php echo $url . '/Usuario/biblioteca.php'; ?>">Directorio de Mangas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link link-margin link-light" href="<?php echo $url . 'Plantillas/Premium.php'; ?>">Premium
+                            <a class="nav-link link-margin link-light" href="<?php echo $url . '/Plantillas/Premium.php'; ?>">Premium
                                 <img class="img-premium nav-link" src="../Img/Diamante.png" alt="LogoPremium">
                             </a>
                         </li>
@@ -92,7 +92,7 @@ $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-";
 
                     </ul>
                     <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" onkeyup="buscar_ahora($('#Buscar').val());">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-light" type="submit">Search</button>
                     </form>
                 </div>
