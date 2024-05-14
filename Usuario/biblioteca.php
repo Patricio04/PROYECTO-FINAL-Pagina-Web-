@@ -34,7 +34,42 @@ if ($resultado->num_rows > 0) {
     <strong>No se encontraron mangas disponibles</strong></div>";
 }
 
-$json_data = json_encode($datosmangas);
+
+
+// Obtener el ID de usuario de la sesión
+$id_usuario = $_SESSION['IdUsuario'];
+
+// Obtener el ID del manga desde el formulario
+$id_manga = $_POST['id_manga']; // Este es el valor del atributo "value" del input hidden en tu formulario
+
+
+// Preparar la consulta SQL
+$sql = "INSERT INTO Visualizacion (IdUsuario, IdManga) VALUES (?, ?)";
+
+// Preparar la sentencia
+if ($stmt = $conn->prepare($sql)) {
+    // Vincular los parámetros
+    $stmt->bind_param("ii", $id_usuario, $id_manga);
+
+    // Ejecutar la consulta
+    if ($stmt->execute()) {
+        // La inserción se realizó correctamente
+        echo "La visualización se ha insertado correctamente en la base de datos.";
+    } else {
+        // Error al ejecutar la consulta
+        echo "Error al insertar la visualización en la base de datos: " . $stmt->error;
+    }
+
+    // Cerrar la sentencia
+    $stmt->close();
+} else {
+    // Error al preparar la consulta
+    echo "Error al preparar la consulta: " . $conn->error;
+}
+
+
+
+
 ?>
 
 
@@ -83,13 +118,16 @@ $json_data = json_encode($datosmangas);
 
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-light">Comenzar a leer</button>
-
+                                <form method="POST">
+                                    <input type="hidden" class="id-manga" name="id_manga" value="<?php echo $manga['id']; ?>">
+                                <button type="submit" class="btn btn-sm btn-outline-light comenzar-leer">Comenzar a leer</button>
+                                </form>
                             </div>
                             <small class="text-body-secondary" id="visualizations">
                                 <i class="fas fa-eye"></i> <!-- Icono del ojo -->
                                 <span id="visualizationCount"><?php echo $manga['visualizaciones']; ?></span>
                             </small>
+                            
 
 
 
@@ -148,3 +186,4 @@ $json_data = json_encode($datosmangas);
 <?php
 include '../Plantillas/Footer.php';
 ?>
+
