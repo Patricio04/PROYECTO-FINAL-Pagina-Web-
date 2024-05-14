@@ -54,7 +54,7 @@ if ($stmt = $conn->prepare($sql)) {
     // Ejecutar la consulta
     if ($stmt->execute()) {
         // La inserción se realizó correctamente
-        echo "La visualización se ha insertado correctamente en la base de datos.";
+        echo "";
     } else {
         // Error al ejecutar la consulta
         echo "Error al insertar la visualización en la base de datos: " . $stmt->error;
