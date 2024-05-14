@@ -107,7 +107,7 @@ if (isset($_POST['id_manga'])) {
                         <p class="card-text"><?php echo $manga['descripcion']; ?></p>
 
                         <?php foreach ($manga['etiquetas'] as $etiqueta) : ?>
-                            <span class="badge rounded-pill btn btn-outline-info mb-3"><?php echo $etiqueta; ?></span>
+                           <span class="badge rounded-pill btn btn-outline-info mb-3"><?php echo $etiqueta; ?></span>
                         <?php endforeach; ?>
                         <!--
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Comedia</span>
