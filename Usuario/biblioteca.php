@@ -36,37 +36,41 @@ if ($resultado->num_rows > 0) {
 
 
 
-// Obtener el ID de usuario de la sesión
-$id_usuario = $_SESSION['IdUsuario'];
+// Verificar si el ID del manga está definido en $_POST
+if (isset($_POST['id_manga'])) {
+    // Obtener el ID del manga desde el formulario
+    $id_manga = $_POST['id_manga']; // Este es el valor del atributo "value" del input hidden en tu formulario
 
-// Obtener el ID del manga desde el formulario
-$id_manga = $_POST['id_manga']; // Este es el valor del atributo "value" del input hidden en tu formulario
+    // Obtener el ID de usuario de la sesión
+    $id_usuario = $_SESSION['IdUsuario'];
 
+    // Preparar la consulta SQL
+    $sql = "INSERT INTO Visualizacion (IdUsuario, IdManga) VALUES (?, ?)";
 
-// Preparar la consulta SQL
-$sql = "INSERT INTO Visualizacion (IdUsuario, IdManga) VALUES (?, ?)";
+    // Preparar la sentencia
+    if ($stmt = $conn->prepare($sql)) {
+        // Vincular los parámetros
+        $stmt->bind_param("ii", $id_usuario, $id_manga);
 
-// Preparar la sentencia
-if ($stmt = $conn->prepare($sql)) {
-    // Vincular los parámetros
-    $stmt->bind_param("ii", $id_usuario, $id_manga);
+        // Ejecutar la consulta
+        if ($stmt->execute()) {
+            // La inserción se realizó correctamente
+            echo "";
+        } else {
+            // Error al ejecutar la consulta
+            echo "Error al insertar la visualización en la base de datos: " . $stmt->error;
+        }
 
-    // Ejecutar la consulta
-    if ($stmt->execute()) {
-        // La inserción se realizó correctamente
-        echo "";
+        // Cerrar la sentencia
+        $stmt->close();
     } else {
-        // Error al ejecutar la consulta
-        echo "Error al insertar la visualización en la base de datos: " . $stmt->error;
+        // Error al preparar la consulta
+        echo "Error al preparar la consulta: " . $conn->error;
     }
-
-    // Cerrar la sentencia
-    $stmt->close();
 } else {
-    // Error al preparar la consulta
-    echo "Error al preparar la consulta: " . $conn->error;
+    // No se ha definido el ID del manga en $_POST
+    echo "";
 }
-
 
 
 

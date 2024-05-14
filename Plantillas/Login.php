@@ -1,5 +1,8 @@
 <?php
 include 'Assets/Bases de datos/db.php';
+if (session_start()=== true) {
+    session_destroy();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($_POST["formulario"] == "signup") { // REGISTRO //
