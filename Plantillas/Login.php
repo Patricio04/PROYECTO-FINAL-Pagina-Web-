@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Verificar el id_rol del usuario y redirigirlo
             if ($fila['IdRol'] == 2) {
-                header("Location: Administrador/Gestion de mangas.php");
+                header("Location: Administrador/Gestion-de-mangas.php");
             } else {
                 header("Location: Usuario/biblioteca.php");
             }
