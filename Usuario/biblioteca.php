@@ -94,7 +94,7 @@ if (isset($_POST['id_manga'])) {
     <!-- Tarjetas de mangas -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <?php foreach ($datosmangas as $manga) : ?>
-            <a href="" class="text-decoration-none" onclick="document.getElementById('miFormulario').submit(); return false;">
+           <!-- <a href="./InfoManga.php" class="text-decoration-none" onclick="document.getElementById('miFormulario').submit(); return false;">-->
 
                 <!-- Aquí puedes agregar tus tarjetas de mangas -->
                 <div class="col manga-card" data-etiquetas="<?php echo implode(',', $manga['etiquetas']); ?>">
@@ -127,7 +127,9 @@ if (isset($_POST['id_manga'])) {
                                 <div class="btn-group">
                                     <form method="POST" id="miFormulario">
                                         <input type="hidden" class="id-manga" name="id_manga" value="<?php echo $manga['id']; ?>">
+                                        
                                         <button type="submit" class="btn btn-sm btn-outline-light comenzar-leer">Comenzar a leer</button>
+                                    
                                     </form>
                                 </div>
                                 <small class="text-body-secondary" id="visualizations">
@@ -142,7 +144,7 @@ if (isset($_POST['id_manga'])) {
                         </div>
                     </div>
                 </div>
-            </a>
+           <!-- </a> -->
             <!-- Agrega más tarjetas de mangas según necesites -->
         <?php endforeach; ?>
     </div>
