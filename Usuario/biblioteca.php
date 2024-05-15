@@ -26,7 +26,7 @@ if ($resultado->num_rows > 0) {
             'visualizaciones' => $fila['Visualizaciones'],
             'etiquetas' => $fila['Etiquetas'] ? explode(',', $fila['Etiquetas']) : array()
         );
-       // print_r($datosmangas);
+        // print_r($datosmangas);
     }
 } else {
     echo "<div class='alert alert-dismissible alert-warning' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
@@ -78,7 +78,6 @@ if (isset($_POST['id_manga'])) {
 
 
 
-<?php $url = "http://" . $_SERVER['HTTP_HOST'] . "/PROYECTO-FINAL-Pagina-Web-" ?> <!-- Esto sirve para redireccionar a la carpeta principal del proyecto (por el momento se llama "PROYECTO-FINAL-Pagina-Web-"), ['HTTP_HOST'] sirve para colocar al principio el nombre del host actual (por el momento el host es "localhost"), esto para que si lo llegamos a subir y le cambiamos el nombre al host por algo como "Tatsu.com" ahora este sea el nombre del HOST y no haya inconvenientes con páginas que no se ven porque el direccionamiento está incorrecto-->
 <div class="container">
     <h1 class="my-4">Biblioteca de Mangas</h1>
 
@@ -95,21 +94,25 @@ if (isset($_POST['id_manga'])) {
     <!-- Tarjetas de mangas -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <?php foreach ($datosmangas as $manga) : ?>
-            <!-- Aquí puedes agregar tus tarjetas de mangas -->
-            <div class="col manga-card" data-etiquetas="<?php echo implode(',', $manga['etiquetas']); ?>">
-                <div class="card shadow-sm position-relative">
-                    <div class="title-container">
-                        <h5 class="card-header"><?php echo $manga['titulo']; ?></h5>
-                    </div>
+            <a href="" class="text-decoration-none" onclick="document.getElementById('miFormulario').submit(); return false;">
 
-                    <img src="<?php echo $manga['portada']; ?>" class="card-img-top" alt="Imagen de manga" style="width: 100%; height: 225px;">
-                    <div class="card-body">
-                        <p class="card-text"><?php echo $manga['descripcion']; ?></p>
+                <!-- Aquí puedes agregar tus tarjetas de mangas -->
+                <div class="col manga-card" data-etiquetas="<?php echo implode(',', $manga['etiquetas']); ?>">
+                    <div class="card shadow-sm position-relative">
+                        <div class="title-container">
+                            <h5 class="card-header"><?php echo $manga['titulo']; ?></h5>
+                        </div>
 
-                        <?php foreach ($manga['etiquetas'] as $etiqueta) : ?>
-                           <span class="badge rounded-pill btn btn-outline-info mb-3"><?php echo $etiqueta; ?></span>
-                        <?php endforeach; ?>
-                        <!--
+                        <img src="<?php echo $manga['portada']; ?>" class="card-img-top" alt="Imagen de manga" style="width: 100%; height: 225px;">
+                        <div class="card-body">
+                            <p class="card-text"><?php //echo $manga['descripcion']; 
+                                                    ?></p>
+
+                            <?php foreach ($manga['etiquetas'] as $etiqueta) : ?>
+                                <span class="badge rounded-pill btn btn-outline-info mb-3"><?php //echo $etiqueta; 
+                                                                                            ?></span>
+                            <?php endforeach; ?>
+                            <!--
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Comedia</span>
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Terror</span>
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Escolar</span>
@@ -120,25 +123,26 @@ if (isset($_POST['id_manga'])) {
                         -->
 
 
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <form method="POST">
-                                    <input type="hidden" class="id-manga" name="id_manga" value="<?php echo $manga['id']; ?>">
-                                <button type="submit" class="btn btn-sm btn-outline-light comenzar-leer">Comenzar a leer</button>
-                                </form>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <form method="POST" id="miFormulario">
+                                        <input type="hidden" class="id-manga" name="id_manga" value="<?php echo $manga['id']; ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-light comenzar-leer">Comenzar a leer</button>
+                                    </form>
+                                </div>
+                                <small class="text-body-secondary" id="visualizations">
+                                    <i class="fas fa-eye"></i> <!-- Icono del ojo -->
+                                    <span id="visualizationCount"><?php echo $manga['visualizaciones']; ?></span>
+                                </small>
+
+
+
+
                             </div>
-                            <small class="text-body-secondary" id="visualizations">
-                                <i class="fas fa-eye"></i> <!-- Icono del ojo -->
-                                <span id="visualizationCount"><?php echo $manga['visualizaciones']; ?></span>
-                            </small>
-                            
-
-
-
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
             <!-- Agrega más tarjetas de mangas según necesites -->
         <?php endforeach; ?>
     </div>
@@ -174,13 +178,13 @@ if (isset($_POST['id_manga'])) {
                 <h6>Géneros</h6>
                 <div class="mb-3">
 
-                    
+
                 </div>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id ="BotonFiltrar">Aplicar Filtros</button>
+                <button type="button" class="btn btn-primary" id="BotonFiltrar">Aplicar Filtros</button>
             </div>
         </div>
     </div>
@@ -190,4 +194,3 @@ if (isset($_POST['id_manga'])) {
 <?php
 include '../Plantillas/Footer.php';
 ?>
-
