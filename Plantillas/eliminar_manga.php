@@ -19,6 +19,13 @@ if (isset($data['id'])) {
         $stmt->bind_param("i", $idManga);
         $stmt->execute();
 
+        // Elimina las visualizaciones asociadas al manga
+        $sql = "DELETE FROM Visualizacion WHERE IdManga = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $idManga);
+        $stmt->execute();
+        $stmt->close();
+
         // Elimina el manga
         $sql = "DELETE FROM Manga WHERE IdManga = ?";
         $stmt = $conn->prepare($sql);

@@ -39,53 +39,83 @@ if ($resultado->num_rows > 0) {
 
 
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Datos del formulario
+    $idManga = intval($_POST['idManga']);
     $titulo = $_POST['txtitulo'];
     $portada = $_POST['txtportada'];
     $descripcion = $_POST['txtareadescripcion'];
-    $etiquetas = $_POST['etiquetas']; // Array de etiquetas seleccionadas
+    $etiquetas = $_POST['etiquetas'];
 
     // Inicia la transacción
     $conn->begin_transaction();
 
-    // Inserta el manga
-    $sql = "INSERT INTO Manga (Titulo, Portada, Descripcion) VALUES ('$titulo', '$portada', '$descripcion')";
-    $result = $conn->query($sql);
+    try {
+        // Actualiza el manga
+        $sql = "UPDATE Manga SET Titulo = ?, Portada = ?, Descripcion = ? WHERE IdManga = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssi", $titulo, $portada, $descripcion, $idManga);
+        $stmt->execute();
 
-    if ($result === TRUE) {
-        // Obtiene el ID del manga insertado
-        $idManga = $conn->insert_id;
-        // echo "ID del manga insertado: " . $idManga;
+        // Elimina las etiquetas asociadas al manga
+        $sql = "DELETE FROM EtiquetaManga WHERE IdManga = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $idManga);
+        $stmt->execute();
+
         // Inserta las etiquetas del manga
+        $sql = "INSERT INTO EtiquetaManga (IdManga, IdEtiqueta) VALUES (?, ?)";
+        $stmt = $conn->prepare($sql);
         foreach ($etiquetas as $idEtiqueta) {
-            $sql = "INSERT INTO EtiquetaManga (IdManga, IdEtiqueta) VALUES ('$idManga', '$idEtiqueta')";
-            $result = $conn->query($sql);
-            if ($result === FALSE) {
-                // Si la inserción de etiquetas falla, puedes deshacer la transacción
-                $conn->rollback();
-                echo "Error al insertar etiquetas: " . $conn->error;
-                exit;
-            }
+            $stmt->bind_param("ii", $idManga, $idEtiqueta);
+            $stmt->execute();
         }
 
         // Confirma la transacción
         $conn->commit();
+
         header("Location: Gestion-de-mangas.php"); // Redirige de vuelta a la gestión de mangas
         exit();
-    } else {
-        // Si la inserción de manga falla, puedes deshacer la transacción
+    } catch (Exception $e) {
+        // Si ocurre un error, deshace la transacción
         $conn->rollback();
-        echo "Error al insertar manga: " . $conn->error;
+        echo "Error: " . $e->getMessage();
+    } finally {
+        $stmt->close();
+        $conn->close();
     }
-
-    // Cierra la conexión
-   
 }
 
+  
+   
 
 
+
+
+// Verificar si hay un ID de manga en la URL
+$idManga = isset($_GET['id']) ? intval($_GET['id']) : 0;
+//echo "$idManga";
+$manga = null;
+$etiquetasSeleccionadas = [];
+
+// Si hay un ID de manga, cargar los datos del manga
+if ($idManga > 0) {
+    $sql = "SELECT * FROM Manga WHERE IdManga = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $idManga);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $manga = $result->fetch_assoc();
+    
+    // Cargar las etiquetas asociadas al manga
+    $sql = "SELECT IdEtiqueta FROM EtiquetaManga WHERE IdManga = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $idManga);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $etiquetasSeleccionadas[] = $row['IdEtiqueta'];
+    }
+}
 
 ?>
 
@@ -147,13 +177,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     <form class="row needs-validation p-5 h-100 m-5 text-white bg-dark border rounded-3" novalidate method="POST">
-    <input type="hidden" name="idManga" value="">
+    <input type="hidden" name="idManga" value="<?php echo $manga ? $manga['IdManga'] : ''; ?>">
 
         <div class="col-md-4">
             <label for="validationCustom01" class="form-label">
                 <h5>Titulo</h5>
             </label>
-            <input type="text" class="form-control" id="txtitulo" name="txtitulo" value="" required placeholder="Ingresar titulo del manga (Max. 255 caracteres)">
+            <input type="text" class="form-control" id="txtitulo" name="txtitulo" value="<?php echo $manga ? htmlspecialchars($manga['Titulo']) : ''; ?>" required placeholder="Ingresar titulo del manga (Max. 255 caracteres)">
             <div class="valid-feedback">
                 Bien!
             </div>
@@ -162,7 +192,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="validationCustom02" class="form-label">
                 <h5>Portada</h5>
             </label>
-            <input type="text" class="form-control" id="txtportada" name="txtportada" value="" required placeholder="Ingresar enlace de la portada">
+            <input type="text" class="form-control" id="txtportada" name="txtportada" value="<?php echo $manga ? htmlspecialchars($manga['Portada']) : ''; ?>" required placeholder="Ingresar enlace de la portada">
             <small class="form-text text-muted">Por favor revisar la nube -> <a href="https://www.dropbox.com/home/Tatsu"><i class="fa-solid fa-cloud-arrow-up"></i></a></small>
         </div>
         <div class="col-md-4">
@@ -172,7 +202,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php foreach ($etiquetas as $etiqueta) { ?>
                 <div class="form-check">
                     <!-- Utilizamos el ID de la etiqueta como valor del checkbox -->
-                    <input class="form-check-input" type="checkbox" value="<?php echo $etiqueta['id']; ?>" id="etiqueta_<?php echo $etiqueta['id']; ?>" name="etiquetas[]">
+                    <input class="form-check-input" type="checkbox" value="<?php echo $etiqueta['id']; ?>" id="etiqueta_<?php echo $etiqueta['id']; ?>" name="etiquetas[]" <?php echo in_array($etiqueta['id'], $etiquetasSeleccionadas) ? 'checked' : ''; ?>>
                     <label class="form-check-label" for="etiqueta_<?php echo $etiqueta['id']; ?>">
                         <?php echo $etiqueta['nombre']; ?>
                     </label>
@@ -186,7 +216,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="exampleTextarea" class="form-label mt-4">
                 <h5>Descripción</h5>
             </label>
-            <textarea class="form-control" id="txtareadescripcion" name="txtareadescripcion" rows="3" placeholder="Indique la trama del manga (max. 1000 caracteres)"></textarea>
+            <textarea class="form-control" id="txtareadescripcion" name="txtareadescripcion" rows="3" placeholder="Indique la trama del manga (max. 1000 caracteres)"><?php echo $manga ? htmlspecialchars($manga['Descripcion']) : ''; ?></textarea>
             <div class="invalid-feedback">
                 Por favor coloque una descripción
             </div>
@@ -197,7 +227,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             falta decidir si colocar aqui el formulario de los capitulos y el contenido_capitulos o separarlos (ya que si no hay un manga creado antes no pueden existir capitulos, y sin capitulos no pueden existir contenido de capitulos)
         </div>
         <div class="col-12 mt-5">
-            <button class="btn btn-primary" type="submit">Agregar nuevo manga</button>
+            <button class="btn btn-primary" type="submit">Actualizar manga</button>
         </div>
     </form>
 

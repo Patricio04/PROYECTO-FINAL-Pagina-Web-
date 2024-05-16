@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="../Styles/AdministradorCSS/Administrador.css">
     <link rel="stylesheet" href="../Styles/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css">
 
 </head>
 
@@ -106,7 +107,7 @@ $conn->close();
     <!-- Contenedor de la tabla -->
     <div class="container mt-5">
 
-        <div class="row justify-content-end">
+        <div class="row justify-content-center">
             <div class="row align-items-md-stretch text-center">
                 <div class="col-md-12">
                     <div class="h-100 p-5 text-white bg-dark border rounded-3">
@@ -128,11 +129,10 @@ $conn->close();
 
             <div class="col-md-12 ">
                 <div class="table-responsive h-100 p-5 text-white bg-dark border rounded-3 overflow-auto">
-                    <table class="table table-hover table-striped ">
-                        <thead>
-                            <caption>
 
-                            </caption>
+                    <table class="table table-hover table-striped " id="myTable">
+                        <thead>
+
                             <tr>
                                 <th scope="col " class="align-middle text-center">ID_Manga</th>
                                 <th scope="col " class="align-middle text-center">Titulo</th>
@@ -141,24 +141,27 @@ $conn->close();
                                 <th scope="col " class="align-middle text-center">Registro</th>
                             </tr>
                         </thead>
-                        <?php foreach ($mangas as $manga) { ?><!-- Iteramos con un foreach para generar rows de la tabla cada que haya un manga dentro de la base de datos-->
-                            <tr id="manga-<?php echo $manga['IdManga']; ?>" class="table-primary">
-                                <th scope="row" class="align-middle text-center"><?php echo $manga['IdManga']; ?></th>
-                                <td class="align-middle text-center"><?php echo $manga['Titulo']; ?></td>
-                                <td class="align-middle text-center"><?php echo $manga['Descripcion']; ?></td>
-                                <td class="align-middle text-center"><img src="<?php echo $manga['Portada']; ?>" alt="Portada del manga" class="portada-imagen"></td>
-                                <td class="align-middle text-center">
-                                    <a href="./Gestion de mangas formulario.php?php echo $manga['IdManga']; ?>" class="text-white">
-                                        <i class="fa-solid fa-pen-to-square fa-xl m-3"></i>
-                                    </a>
-                                    <a href="" class="text-white ancoreborrar" data-id="<?php echo $manga['IdManga']; ?>">
-                                        <i class="fa-solid fa-trash fa-lg m-3"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                        <tbody id="mangaTableBody">
+                            <?php foreach ($mangas as $manga) { ?><!-- Iteramos con un foreach para generar rows de la tabla cada que haya un manga dentro de la base de datos-->
+                                <tr id="manga-<?php echo $manga['IdManga']; ?>" class="table-primary">
+                                    <td scope="row" class="align-middle text-center"><?php echo $manga['IdManga']; ?></td>
+                                    <td class="align-middle text-center"><?php echo $manga['Titulo']; ?></td>
+                                    <td class="align-middle text-center"><?php echo $manga['Descripcion']; ?></td>
+                                    <td class="align-middle text-center"><img src="<?php echo $manga['Portada']; ?>" alt="Portada del manga" class="portada-imagen"></td>
+                                    <td class="align-middle text-center">
+                                        <a href="./Gestion de mangas formulario update.php?id=<?php echo $manga['IdManga']; ?>" class="text-white">
+                                            <i class="fa-solid fa-pen-to-square fa-xl m-3"></i>
+                                        </a>
+                                        <a href="" class="text-white ancoreborrar" data-id="<?php echo $manga['IdManga']; ?>">
+                                            <i class="fa-solid fa-trash fa-lg m-3"></i>
+                                        </a>
+                                    </td>
+                                </tr>
 
-                        <?php } ?>
+                            <?php } ?>
+                        </tbody>
                     </table>
+
                 </div>
             </div>
 
@@ -181,42 +184,74 @@ $conn->close();
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const deleteLinks = document.querySelectorAll('.ancoreborrar');
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteLinks = document.querySelectorAll('.ancoreborrar');
 
-    deleteLinks.forEach(function(link) {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
+            deleteLinks.forEach(function(link) {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
 
-            const mangaId = this.getAttribute('data-id');
-            const confirmed = confirm('¿Estás seguro de que deseas eliminar este manga?');
+                    const mangaId = this.getAttribute('data-id');
+                    const confirmed = confirm('¿Estás seguro de que deseas eliminar este manga?');
 
-            if (confirmed) {
-                fetch('../Plantillas/eliminar_manga.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ id: mangaId })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const row = document.getElementById('manga-' + mangaId);
-                        row.parentNode.removeChild(row);
+                    if (confirmed) {
+                        fetch('../Plantillas/eliminar_manga.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    id: mangaId
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    const row = document.getElementById('manga-' + mangaId);
+                                    row.parentNode.removeChild(row);
+                                } else {
+                                    alert('Error al eliminar el manga: ' + data.message);
+                                }
+                            })
+                            .catch(error => console.error('Error:', error));
                     } else {
-                        alert('Error al eliminar el manga: ' + data.message);
+
+                        // Puedes agregar cualquier acción adicional aquí si es necesario
+                        console.log('Eliminación del manga cancelada.');
                     }
-                })
-                .catch(error => console.error('Error:', error));
-            }
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
+
+
+
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
+
+    <script>
+        
+        new DataTable('#myTable', {
+            language: {
+                    lengthMenu: "Mostrar_MENU_registros por página",
+                    zeroRecords: "Ningun Manga encontrado",
+                    info: "Mostrando de _START_ a _END_ de un total de _TOTAL_ registros",
+                    infoEmpty: "Ningun Manga encontrado",
+                    infoFiltered:"(filtrados desde _MAX_ registros totales)",
+                    search:"Buscar: ",
+                    loadingRecords: "cargando...",
+                    paginate:{
+                        first:"Primero",
+                        last:"Ultimo",
+                        next:"Siguiente",
+                        previous: "Anterior"
+                    }
+                }
+        });
+    </script>
 
 
 
