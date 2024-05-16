@@ -51,6 +51,8 @@ $conn->close();
 
 
 <body>
+
+
     <nav class="navbar bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand  link-light" href="#">
@@ -93,15 +95,14 @@ $conn->close();
                             <a class="nav-link text-white" href="./Gestion de planes.php"><i class="fa-solid fa-gem m-2"></i>Planes</a>
                         </li>
                     </ul>
-                    <form class="d-flex mt-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    <form class="d-flex mt-3">
+                        <a class=" btn btn-outline-danger" href="?cerrar_sesion">Cerrar Sesión</a>
                     </form>
                 </div>
             </div>
         </div>
     </nav>
-    
+
     <!-- Contenedor de la tabla -->
     <div class="container mt-5">
 
@@ -172,14 +173,52 @@ $conn->close();
 
 
 
-    
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://kit.fontawesome.com/9319846bc5.js" crossorigin="anonymous"></script>
     <script src="../Scrips/Animaciones-Administrador/Administrador.js"></script>
-    
-    
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteLinks = document.querySelectorAll('.ancoreborrar');
+
+    deleteLinks.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const mangaId = this.getAttribute('data-id');
+            const confirmed = confirm('¿Estás seguro de que deseas eliminar este manga?');
+
+            if (confirmed) {
+                fetch('../Plantillas/eliminar_manga.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: mangaId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const row = document.getElementById('manga-' + mangaId);
+                        row.parentNode.removeChild(row);
+                    } else {
+                        alert('Error al eliminar el manga: ' + data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        });
+    });
+});
+</script>
+
+
 
 </body>
 

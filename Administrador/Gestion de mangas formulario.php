@@ -21,29 +21,77 @@
 require '../Assets/Bases de datos/db.php';
 
 // Consulta SQL para seleccionar todas las etiquetas
-$sql = "SELECT nombre_etiqueta FROM etiquetas";
+$sql = "SELECT IdEtiqueta, NombreEtiqueta FROM Etiqueta";
 $resultado = $conn->query($sql);
 
-// Comprueba si hay resultados y guarda los nombres de las etiquetas en un array
+// Comprueba si hay resultados y guarda los nombres y IDs de las etiquetas en un array asociativo
 $etiquetas = array();
 if ($resultado->num_rows > 0) {
     while ($fila = $resultado->fetch_assoc()) {
-        $etiquetas[] = $fila["nombre_etiqueta"];
+        $etiquetas[] = array(
+            "id" => $fila["IdEtiqueta"],
+            "nombre" => $fila["NombreEtiqueta"]
+        );
     }
 } else {
     echo "No se encontraron etiquetas.";
 }
-$conn->close();
+
+
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Datos del formulario
+    $titulo = $_POST['txtitulo'];
+    $portada = $_POST['txtportada'];
+    $descripcion = $_POST['txtareadescripcion'];
+    $etiquetas = $_POST['etiquetas']; // Array de etiquetas seleccionadas
+
+    // Inicia la transacción
+    $conn->begin_transaction();
+
+    // Inserta el manga
+    $sql = "INSERT INTO Manga (Titulo, Portada, Descripcion) VALUES ('$titulo', '$portada', '$descripcion')";
+    $result = $conn->query($sql);
+
+    if ($result === TRUE) {
+        // Obtiene el ID del manga insertado
+        $idManga = $conn->insert_id;
+        // echo "ID del manga insertado: " . $idManga;
+        // Inserta las etiquetas del manga
+        foreach ($etiquetas as $idEtiqueta) {
+            $sql = "INSERT INTO EtiquetaManga (IdManga, IdEtiqueta) VALUES ('$idManga', '$idEtiqueta')";
+            $result = $conn->query($sql);
+            if ($result === FALSE) {
+                // Si la inserción de etiquetas falla, puedes deshacer la transacción
+                $conn->rollback();
+                echo "Error al insertar etiquetas: " . $conn->error;
+                exit;
+            }
+        }
+
+        // Confirma la transacción
+        $conn->commit();
+        echo "";
+    } else {
+        // Si la inserción de manga falla, puedes deshacer la transacción
+        $conn->rollback();
+        echo "Error al insertar manga: " . $conn->error;
+    }
+
+    // Cierra la conexión
+   
+}
+
 ?>
 
 
 
 <body>
-    <?php $url = "http://" . $_SERVER['HTTP_HOST'] . "/PROYECTO-FINAL-Pagina-Web-" ?> <!-- Esto sirve para redireccionar a la carpeta principal del proyecto (por el momento se llama "PROYECTO-FINAL-Pagina-Web-"), ['HTTP_HOST'] sirve para colocar al principio el nombre del host actual (por el momento el host es "localhost"), esto para que si lo llegamos a subir y le cambiamos el nombre al host por algo como "Tatsu.com" ahora este sea el nombre del HOST y no haya inconvenientes con páginas que no se ven porque el direccionamiento está incorrecto-->
 
-    <nav class="navbar bg-dark">
+<nav class="navbar bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand  link-light" href="<?php echo $url; ?>">
+            <a class="navbar-brand  link-light" href="./Gestion-de-mangas.php">
                 <img src="../Img/noto-v1_tornado.png" alt="Tatsu logo">Tatsu </img>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -62,43 +110,44 @@ $conn->close();
                                 <i class="fa-solid fa-book m-2"></i>Contenido
                             </a>
                             <ul class="dropdown-menu show">
-                                <li><a class="dropdown-item" href="#"><i class="fa-solid fa-book m-2"></i><strong>Gestion de mangas</strong> <i class="fa-solid fa-caret-left m-2"></i></a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fa-solid fa-book m-2"></i>Gestion de carrusel</a></li>
+                                <li><a class="dropdown-item" href="./Gestion-de-mangas.php"><i class="fa-solid fa-book m-2"></i><strong>Gestion de mangas</strong> <i class="fa-solid fa-caret-left m-2"></i></a></li>
+                                <li><a class="dropdown-item" href="./Gestion de carrsuel.php"><i class="fa-solid fa-book m-2"></i>Gestion de carrusel</a></li>
                                 <hr class="dropdown-divider">
-                                <li><a class="dropdown-item" href="#"><i class="fa-solid fa-book m-2"></i>Gestion de etiquetas</a></li>
+                                <li><a class="dropdown-item" href="./Gestion de etiquetas.php"><i class="fa-solid fa-book m-2"></i>Gestion de etiquetas</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="#"><i class="fa-solid fa-user m-2"></i>Usuarios</a>
+                            <a class="nav-link text-white" href="./Gestion de usuarios.php"><i class="fa-solid fa-user m-2"></i>Usuarios</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-regular fa-file m-2"></i>Reportes</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#"><i class="fa-regular fa-file m-2"></i>Financiero</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fa-regular fa-file m-2"></i>Datos de visualizacion</a></li>
+                                <li><a class="dropdown-item" href="./Reportes financieros.php"><i class="fa-regular fa-file m-2"></i>Financiero</a></li>
+                                <li><a class="dropdown-item" href="./Reportes de visualizacion.php"><i class="fa-regular fa-file m-2"></i>Datos de visualizacion</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="#"><i class="fa-solid fa-gem m-2"></i>Planes</a>
+                            <a class="nav-link text-white" href="./Gestion de planes.php"><i class="fa-solid fa-gem m-2"></i>Planes</a>
                         </li>
                     </ul>
-                    <form class="d-flex mt-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    <form class="d-flex mt-3">
+                        <a class=" btn btn-outline-danger" href="?cerrar_sesion">Cerrar Sesión</a>
                     </form>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Formulario para agregar mangas -->
-    <form class="row needs-validation p-5 h-100 m-5 text-white bg-dark border rounded-3" novalidate>
+                            <!-- Formulario para agregar mangas -->
+
+
+    <form class="row needs-validation p-5 h-100 m-5 text-white bg-dark border rounded-3" novalidate method="POST">
         <div class="col-md-4">
             <label for="validationCustom01" class="form-label">
                 <h5>Titulo</h5>
             </label>
-            <input type="text" class="form-control" id="txttitulo" value="" required placeholder="Ingresar titulo del manga (Max. 255 caracteres)">
+            <input type="text" class="form-control" id="txtitulo" name="txtitulo" value="" required placeholder="Ingresar titulo del manga (Max. 255 caracteres)">
             <div class="valid-feedback">
                 Bien!
             </div>
@@ -107,22 +156,22 @@ $conn->close();
             <label for="validationCustom02" class="form-label">
                 <h5>Portada</h5>
             </label>
-            <input type="text" class="form-control" id="txtportada" value="" required placeholder="Ingresar enlace de la portada">
+            <input type="text" class="form-control" id="txtportada" name="txtportada" value="" required placeholder="Ingresar enlace de la portada">
             <small class="form-text text-muted">Por favor revisar la nube -> <a href=""><i class="fa-solid fa-cloud-arrow-up"></i></a></small>
         </div>
         <div class="col-md-4">
             <label for="validationCustom04" class="form-label">
                 <h5>Etiquetas</h5>
             </label>
-            <select class="form-select" required id="etiquetasopciones">
-                <option selected disabled value="">Opciones...</option>
-                <?php // itera sobre el array etiquetas y genera una option por cada etiqueta existente
-                foreach ($etiquetas as $etiqueta) {
-                    echo '<option value="' . $etiqueta . '">' . $etiqueta . '</option>';
-                }
-                ?>
-                
-            </select>
+            <?php foreach ($etiquetas as $etiqueta) { ?>
+                <div class="form-check">
+                    <!-- Utilizamos el ID de la etiqueta como valor del checkbox -->
+                    <input class="form-check-input" type="checkbox" value="<?php echo $etiqueta['id']; ?>" id="etiqueta_<?php echo $etiqueta['id']; ?>" name="etiquetas[]">
+                    <label class="form-check-label" for="etiqueta_<?php echo $etiqueta['id']; ?>">
+                        <?php echo $etiqueta['nombre']; ?>
+                    </label>
+                </div>
+            <?php } ?>
             <div class="invalid-feedback">
                 Please select a valid state.
             </div>
@@ -131,7 +180,7 @@ $conn->close();
             <label for="exampleTextarea" class="form-label mt-4">
                 <h5>Descripción</h5>
             </label>
-            <textarea class="form-control" id="txtareadescripcion" rows="3" placeholder="Indique la trama del manga (max. 1000 caracteres)"></textarea>
+            <textarea class="form-control" id="txtareadescripcion" name="txtareadescripcion" rows="3" placeholder="Indique la trama del manga (max. 1000 caracteres)"></textarea>
             <div class="invalid-feedback">
                 Por favor coloque una descripción
             </div>
@@ -142,7 +191,7 @@ $conn->close();
             falta decidir si colocar aqui el formulario de los capitulos y el contenido_capitulos o separarlos (ya que si no hay un manga creado antes no pueden existir capitulos, y sin capitulos no pueden existir contenido de capitulos)
         </div>
         <div class="col-12 mt-5">
-            <button class="btn btn-primary" type="submit">Submit form</button>
+            <button class="btn btn-primary" type="submit">Agregar nuevo manga</button>
         </div>
     </form>
 
@@ -158,4 +207,3 @@ $conn->close();
 </body>
 
 </html>
-
