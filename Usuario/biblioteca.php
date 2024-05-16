@@ -101,9 +101,10 @@ if (isset($_POST['id_manga'])) {
                     <div class="card shadow-sm position-relative">
                         <div class="title-container">
                             <h5 class="card-header"><?php echo $manga['titulo']; ?></h5>
+                            
                         </div>
 
-                        <img src="<?php echo $manga['portada']; ?>" class="card-img-top" alt="Imagen de manga" style="width: 100%; height: 225px;">
+                        <img src="<?php echo $manga['portada']; ?>" class="card-img-top" alt="Imagen de manga" style="width: 100%; height: 200px;">
                         <div class="card-body">
                             <p class="card-text"><?php //echo $manga['descripcion']; 
                                                     ?></p>
@@ -137,8 +138,11 @@ if (isset($_POST['id_manga'])) {
                                     <span id="visualizationCount"><?php echo $manga['visualizaciones']; ?></span>
                                 </small>
 
-
-
+                                
+                                <small class="text-body-secondary" id="visualizations">
+                                <i class="far fa-heart favorite-icon"></i>
+                                    <span id="visualizationCount"><?php echo $manga['visualizaciones']; ?></span>
+                                </small>
 
                             </div>
                         </div>
