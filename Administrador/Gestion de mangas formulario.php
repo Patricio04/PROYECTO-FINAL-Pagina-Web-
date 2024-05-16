@@ -157,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h5>Portada</h5>
             </label>
             <input type="text" class="form-control" id="txtportada" name="txtportada" value="" required placeholder="Ingresar enlace de la portada">
-            <small class="form-text text-muted">Por favor revisar la nube -> <a href=""><i class="fa-solid fa-cloud-arrow-up"></i></a></small>
+            <small class="form-text text-muted">Por favor revisar la nube -> <a href="https://www.dropbox.com/home/Tatsu"><i class="fa-solid fa-cloud-arrow-up"></i></a></small>
         </div>
         <div class="col-md-4">
             <label for="validationCustom04" class="form-label">

@@ -148,7 +148,7 @@ $conn->close();
                                 <td class="align-middle text-center"><?php echo $manga['Descripcion']; ?></td>
                                 <td class="align-middle text-center"><img src="<?php echo $manga['Portada']; ?>" alt="Portada del manga" class="portada-imagen"></td>
                                 <td class="align-middle text-center">
-                                    <a href="" class="text-white">
+                                    <a href="./Gestion de mangas formulario.php?php echo $manga['IdManga']; ?>" class="text-white">
                                         <i class="fa-solid fa-pen-to-square fa-xl m-3"></i>
                                     </a>
                                     <a href="" class="text-white ancoreborrar" data-id="<?php echo $manga['IdManga']; ?>">
