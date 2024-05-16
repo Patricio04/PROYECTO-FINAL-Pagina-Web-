@@ -235,6 +235,7 @@ $conn->close();
     <script>
         
         new DataTable('#myTable', {
+            pageLength: 3,
             language: {
                     lengthMenu: "Mostrar_MENU_registros por página",
                     zeroRecords: "Ningun Manga encontrado",
