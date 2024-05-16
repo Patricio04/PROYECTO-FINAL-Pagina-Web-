@@ -1,4 +1,3 @@
-<!--Para acceder a este apartado el usuario que inicie sesion tiene que tener un ID_rol = 3 que es el indicado para administradores-->
 
 
 <!DOCTYPE html>
