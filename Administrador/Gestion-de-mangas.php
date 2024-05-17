@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -184,46 +182,78 @@ $conn->close();
 
 
 
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const deleteLinks = document.querySelectorAll('.ancoreborrar');
-
-            deleteLinks.forEach(function(link) {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();
-
-                    const mangaId = this.getAttribute('data-id');
-                    const confirmed = confirm('¿Estás seguro de que deseas eliminar este manga?');
-
-                    if (confirmed) {
-                        fetch('../Plantillas/eliminar_manga.php', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    id: mangaId
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    const row = document.getElementById('manga-' + mangaId);
-                                    row.parentNode.removeChild(row);
-                                } else {
-                                    alert('Error al eliminar el manga: ' + data.message);
-                                }
-                            })
-                            .catch(error => console.error('Error:', error));
-                    } else {
-
-                        // Puedes agregar cualquier acción adicional aquí si es necesario
-                        console.log('Eliminación del manga cancelada.');
+            // Inicializar DataTable para la tabla de mangas
+            const table = new DataTable('#myTable', {
+                pageLength: 3,
+                language: {
+                    lengthMenu: "Mostrar _MENU_ registros por página",
+                    zeroRecords: "Ningun Manga encontrado",
+                    info: "Mostrando de _START_ a _END_ de un total de _TOTAL_ registros",
+                    infoEmpty: "Ningun Manga encontrado",
+                    infoFiltered: "(filtrados desde _MAX_ registros totales)",
+                    search: "Buscar: ",
+                    loadingRecords: "Cargando...",
+                    paginate: {
+                        first: "Primero",
+                        last: "Último",
+                        next: "Siguiente",
+                        previous: "Anterior"
                     }
+                }
+            });
+
+            // Función para adjuntar eventos de eliminación
+            function attachDeleteEvent() {
+                const deleteLinks = document.querySelectorAll('.ancoreborrar');
+
+                deleteLinks.forEach(function(link) {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault();
+
+                        const mangaId = this.getAttribute('data-id');
+                        const confirmed = confirm('¿Estás seguro de que deseas eliminar este manga?');
+
+                        if (confirmed) {
+                            fetch('../Plantillas/eliminar_manga.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        id: mangaId
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        const row = document.getElementById('manga-' + mangaId);
+                                        row.parentNode.removeChild(row);
+                                    } else {
+                                        alert('Error al eliminar el manga: ' + data.message);
+                                    }
+                                })
+                                .catch(error => console.error('Error:', error));
+                        } else {
+                            console.log('Eliminación del manga cancelada.');
+                        }
+                    });
                 });
+            }
+
+            // Adjuntar eventos de eliminación al cargar la página
+            attachDeleteEvent();
+
+            // Adjuntar eventos de eliminación cada vez que se redibuje la tabla
+            table.on('draw', function() {
+                attachDeleteEvent();
             });
         });
     </script>
+
+
 
 
 
@@ -231,27 +261,7 @@ $conn->close();
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
 
-    <script>
-        
-        new DataTable('#myTable', {
-            pageLength: 3,
-            language: {
-                    lengthMenu: "Mostrar_MENU_registros por página",
-                    zeroRecords: "Ningun Manga encontrado",
-                    info: "Mostrando de _START_ a _END_ de un total de _TOTAL_ registros",
-                    infoEmpty: "Ningun Manga encontrado",
-                    infoFiltered:"(filtrados desde _MAX_ registros totales)",
-                    search:"Buscar: ",
-                    loadingRecords: "cargando...",
-                    paginate:{
-                        first:"Primero",
-                        last:"Ultimo",
-                        next:"Siguiente",
-                        previous: "Anterior"
-                    }
-                }
-        });
-    </script>
+
 
 
 

@@ -51,7 +51,7 @@ if ($resultado->num_rows > 0) {
 
     <nav class="navbar bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand  link-light" href="#">
+            <a class="navbar-brand  link-light" href="./Gestion-de-mangas.php">
                 <img src="../Img/noto-v1_tornado.png" alt="Tatsu logo">Tatsu </img>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
