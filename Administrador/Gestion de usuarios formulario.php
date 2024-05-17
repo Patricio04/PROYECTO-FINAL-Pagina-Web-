@@ -1,7 +1,3 @@
-<!--Para acceder a este apartado el usuario que inicie sesion tiene que tener un ID_rol = 3 que es el indicado para administradores-->
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,71 +13,62 @@
 </head>
 
 <?php
-// archivo de conexion a la BD
 require '../Assets/Bases de datos/db.php';
 
-// Consulta SQL para seleccionar todas las etiquetas
-$sql = "SELECT IdEtiqueta, NombreEtiqueta FROM Etiqueta";
+$sql = "SELECT IdPlan, TituloPlan FROM Planes";
 $resultado = $conn->query($sql);
 
-// Comprueba si hay resultados y guarda los nombres y IDs de las etiquetas en un array asociativo
-$etiquetas = array();
+$Planes = array();
 if ($resultado->num_rows > 0) {
     while ($fila = $resultado->fetch_assoc()) {
-        $etiquetas[] = array(
-            "id" => $fila["IdEtiqueta"],
-            "nombre" => $fila["NombreEtiqueta"]
+        $Planes[] = array(
+            "IdPlan" => $fila["IdPlan"],
+            "TituloPlan" => $fila["TituloPlan"]
         );
     }
 } else {
-    echo "No se encontraron etiquetas.";
+    echo "No se encontraron Planes.";
+}
+
+$sql = "SELECT IdRol, NombreRol FROM Rol";
+$resultado = $conn->query($sql);
+
+$Roles = array();
+if ($resultado->num_rows > 0) {
+    while ($fila = $resultado->fetch_assoc()) {
+        $Roles[] = array(
+            "IdRol" => $fila["IdRol"],
+            "NombreRol" => $fila["NombreRol"]
+        );
+    }
+} else {
+    echo "No se encontraron Roles.";
 }
 
 
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Datos del formulario
-    $titulo = $_POST['txtitulo'];
-    $portada = $_POST['txtportada'];
-    $descripcion = $_POST['txtareadescripcion'];
-    $etiquetas = $_POST['etiquetas']; // Array de etiquetas seleccionadas
 
-    // Inicia la transacción
-    $conn->begin_transaction();
+    $nombre = $_POST['txtnombre'];
+    $apellido = $_POST['txtapellido'];
+    $correo = $_POST['txtcorreo'];
+    $contraseña = $_POST['txtcontraseña'];
+    $rol = $_POST['selectrol'];
+    $plan = $_POST['selectplan'];
 
-    // Inserta el manga
-    $sql = "INSERT INTO Manga (Titulo, Portada, Descripcion) VALUES ('$titulo', '$portada', '$descripcion')";
+    $contraseña_encriptada = password_hash($contraseña, PASSWORD_DEFAULT);
+
+
+    $sql = "INSERT INTO Usuario (Nombre, Apellido, Correo, IdRol, IdPlan, Contraseña) VALUES ('$nombre', '$apellido', '$correo', '$rol', '$plan', '$contraseña_encriptada')";
     $result = $conn->query($sql);
 
-    if ($result === TRUE) {
-        // Obtiene el ID del manga insertado
-        $idManga = $conn->insert_id;
-        // echo "ID del manga insertado: " . $idManga;
-        // Inserta las etiquetas del manga
-        foreach ($etiquetas as $idEtiqueta) {
-            $sql = "INSERT INTO EtiquetaManga (IdManga, IdEtiqueta) VALUES ('$idManga', '$idEtiqueta')";
-            $result = $conn->query($sql);
-            if ($result === FALSE) {
-                // Si la inserción de etiquetas falla, puedes deshacer la transacción
-                $conn->rollback();
-                echo "Error al insertar etiquetas: " . $conn->error;
-                exit;
-            }
-        }
 
-        // Confirma la transacción
-        $conn->commit();
-        header("Location: Gestion-de-mangas.php"); // Redirige de vuelta a la gestión de mangas
-        exit();
-    } else {
-        // Si la inserción de manga falla, puedes deshacer la transacción
-        $conn->rollback();
-        echo "Error al insertar manga: " . $conn->error;
-    }
+    header("Location: Gestion de usuarios.php");
+    exit();
 
-    // Cierra la conexión
-   
+    
+
 }
 
 
@@ -93,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
 
-<nav class="navbar bg-dark">
+    <nav class="navbar bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand  link-light" href="./Gestion-de-mangas.php">
                 <img src="../Img/noto-v1_tornado.png" alt="Tatsu logo">Tatsu </img>
@@ -143,61 +130,98 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </nav>
 
-                            <!-- Formulario para agregar mangas -->
+    <!-- Formulario para agregar mangas -->
 
 
     <form class="row needs-validation p-5 h-100 m-5 text-white bg-dark border rounded-3" method="POST">
-    <input type="hidden" name="idManga" value="">
+        <input type="hidden" name="idUsuario" value="">
 
-        <div class="col-md-4">
-            <label for="validationCustom01" class="form-label">
-                <h5>Titulo</h5>
-            </label>
-            <input type="text" class="form-control" id="txtitulo" name="txtitulo" value="" required placeholder="Ingresar titulo del manga (Max. 255 caracteres)">
-            <div class="valid-feedback">
-                Bien!
-            </div>
-        </div>
-        <div class="col-md-4">
-            <label for="validationCustom02" class="form-label">
-                <h5>Portada</h5>
-            </label>
-            <input type="text" class="form-control" id="txtportada" name="txtportada" value="" required placeholder="Ingresar enlace de la portada">
-            <small class="form-text text-muted">Por favor revisar la nube -> <a href="https://www.dropbox.com/home/Tatsu"><i class="fa-solid fa-cloud-arrow-up"></i></a></small>
-        </div>
-        <div class="col-md-4">
-            <label for="validationCustom04" class="form-label">
-                <h5>Etiquetas</h5>
-            </label>
-            <?php foreach ($etiquetas as $etiqueta) { ?>
-                <div class="form-check">
-                    <!-- Utilizamos el ID de la etiqueta como valor del checkbox -->
-                    <input class="form-check-input" type="checkbox" value="<?php echo $etiqueta['id']; ?>" id="etiqueta_<?php echo $etiqueta['id']; ?>" name="etiquetas[]">
-                    <label class="form-check-label" for="etiqueta_<?php echo $etiqueta['id']; ?>">
-                        <?php echo $etiqueta['nombre']; ?>
-                    </label>
+        <div class="row justify-content-center">
+            <div class="row align-items-md-stretch text-center">
+                <div class="col-md-12">
+                    <div class="h-100 p-5 text-white bg-dark border rounded-3">
+                        <h2>Añadir nuevos usuarios</h2>
+                        <hr>
+
+                       
+                    </div>
                 </div>
-            <?php } ?>
-            <div class="invalid-feedback">
-                Please select a valid state.
+
+            </div>
+
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-7 mb-3">
+                <label for="validationCustom01" class="form-label">
+                    <h5>Nombre</h5>
+                </label>
+                <input type="text" class="form-control" id="txtnombre" name="txtnombre" value="" required placeholder="Ingresar nombre(s)">
+                <div class="valid-feedback">
+                    Bien!
+                </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <label for="exampleTextarea" class="form-label mt-4">
-                <h5>Descripción</h5>
-            </label>
-            <textarea class="form-control" id="txtareadescripcion" name="txtareadescripcion" rows="3" placeholder="Indique la trama del manga (max. 1000 caracteres)"></textarea>
-            <div class="invalid-feedback">
-                Por favor coloque una descripción
+        <div class="row justify-content-center">
+            <div class="col-md-7 mb-3">
+                <label for="validationCustom02" class="form-label">
+                    <h5>Apellido</h5>
+                </label>
+                <input type="text" class="form-control" id="txtapellido" name="txtapellido" value="" required placeholder="Ingresar apellido(s)">
+
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-7 mb-3">
+                <label for="validationCustom02" class="form-label">
+                    <h5>Correo</h5>
+                </label>
+                <input type="mail" class="form-control" id="txtcorreo" name="txtcorreo" value="" required placeholder="Ingresar correo (ej.): example@example.com">
+
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-7 mb-3">
+                <label for="validationCustom02" class="form-label">
+                    <h5>Contraseña</h5>
+                </label>
+                <input type="password" class="form-control" id="txtcontraseña" name="txtcontraseña" value="" required placeholder="Ingresar contraseña:">
+
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-3 mb-3">
+                <label for="validationCustom02" class="form-label">
+                    <h5>Rol</h5>
+                </label>
+                <select class="form-select" id="exampleSelect1" required name="selectrol">
+                    <option selected disabled value="">Seleccionar Rol...</option>
+                    <?php foreach ($Roles as $Rol) { ?>
+                        <option value="<?php echo $Rol['IdRol']; ?>"><?php echo $Rol['NombreRol']; ?></option>
+                    <?php } ?>
+
+                </select>
+            </div>
+
+
+            <div class="col-md-3 mb-3">
+                <label for="validationCustom02" class="form-label">
+                    <h5>Plan</h5>
+                </label>
+                <select class="form-select" id="exampleSelect1" required name="selectplan">
+                    <option selected disabled value="">Seleccionar Plan...</option>
+                    <?php foreach ($Planes as $Plan) { ?>
+                        <option value="<?php echo $Plan['IdPlan']; ?>"><?php echo $Plan['TituloPlan']; ?></option>
+                    <?php } ?>
+
+                </select>
             </div>
         </div>
 
-
-        <div class="col-12">
-            falta decidir si colocar aqui el formulario de los capitulos y el contenido_capitulos o separarlos (ya que si no hay un manga creado antes no pueden existir capitulos, y sin capitulos no pueden existir contenido de capitulos)
-        </div>
-        <div class="col-12 mt-5">
-            <button class="btn btn-primary" type="submit">Agregar nuevo manga</button>
+        <div class="row justify-content-center">
+            <div class="col-md-2 mt-5">
+                <button class="btn btn-primary" type="submit">Agregar nuevo usuario</button>
+            </div>
         </div>
     </form>
 

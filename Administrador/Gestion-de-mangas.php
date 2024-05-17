@@ -191,7 +191,7 @@ $conn->close();
                 language: {
                     lengthMenu: "Mostrar _MENU_ registros por página",
                     zeroRecords: "Ningun Manga encontrado",
-                    info: "Mostrando de _START_ a _END_ de un total de _TOTAL_ registros",
+                    info: "Mostrando del _START_ al _END_ de un total de _TOTAL_ registros",
                     infoEmpty: "Ningun Manga encontrado",
                     infoFiltered: "(filtrados desde _MAX_ registros totales)",
                     search: "Buscar: ",

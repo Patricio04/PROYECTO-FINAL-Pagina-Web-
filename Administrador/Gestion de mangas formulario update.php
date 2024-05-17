@@ -176,7 +176,7 @@ if ($idManga > 0) {
                             <!-- Formulario para agregar mangas -->
 
 
-    <form class="row needs-validation p-5 h-100 m-5 text-white bg-dark border rounded-3" novalidate method="POST">
+    <form class="row needs-validation p-5 h-100 m-5 text-white bg-dark border rounded-3" method="POST">
     <input type="hidden" name="idManga" value="<?php echo $manga ? $manga['IdManga'] : ''; ?>">
 
         <div class="col-md-4">

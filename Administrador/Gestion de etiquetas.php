@@ -182,7 +182,7 @@ if ($resultado->num_rows > 0) {
                 language: {
                     lengthMenu: "Mostrar _MENU_ registros por página",
                     zeroRecords: "Ninguna etiqueta encontrada",
-                    info: "Mostrando de _START_ a _END_ de un total de _TOTAL_ registros",
+                    info: "Mostrando del _START_ al _END_ de un total de _TOTAL_ registros",
                     infoEmpty: "Ninguna etiqueta encontrada",
                     infoFiltered: "(filtrados desde _MAX_ registros totales)",
                     search: "Buscar: ",
@@ -243,44 +243,6 @@ if ($resultado->num_rows > 0) {
         });
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const deleteLinks = document.querySelectorAll('.ancoreborrar');
-
-            deleteLinks.forEach(function(link) {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();
-
-                    const etiquetaId = this.getAttribute('data-id');
-                    const confirmed = confirm('¿Estás seguro de que deseas eliminar esta etiqueta?');
-
-                    if (confirmed) {
-                        fetch('../Plantillas/eliminar_etiqueta.php', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    id: etiquetaId
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    const row = document.getElementById('etiqueta-' + etiquetaId);
-                                    row.parentNode.removeChild(row);
-                                } else {
-                                    alert('Error al eliminar la etiqueta: ' + data.message);
-                                }
-                            })
-                            .catch(error => console.error('Error:', error));
-                    } else {
-                        console.log('Eliminación de la etiqueta cancelada.');
-                    }
-                });
-            });
-        });
-    </script>
 
 
 
