@@ -106,28 +106,37 @@ if (isset($_GET['cerrar_sesion'])) {
 }
 ?>
 
-
+<style>
+        .list-group-item {
+            transition: filter 0.3s ease; /* Añadir una transición suave */
+        }
+        .list-group-item:hover {
+            filter: brightness(1.3); /* Aumentar el brillo al pasar el ratón */
+        }
+    </style>
 
 <body>
     <div class="container mt-4">
         <div class="row bg-dark p-4">
             <div class="col-lg-4">
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item mb-2">
-                        <a class="nav-link active" href="#">Mi cuenta</a>
+                <ul class="list-group">
+                    <li class="list-group-item active">
+                        <a class="nav-link" href="<?php echo $url . '/Usuario/Mi cuenta.php'; ?>">Mi cuenta</a>
                     </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link btn btn-outline-danger" href="?cerrar_sesion">Cerrar Sesión</a>
+                    <li class="list-group-item">
+                        <a class="nav-link" href="<?php echo $url . '/Usuario/MetodoPago.php'; ?>">Metodo de pago</a>
                     </li>
-                    <ul />
+                    <li class="list-group-item">
+                        <a class="nav-link" href="?cerrar_sesion">Cerrar Sesión</a>
+                    </li>
+                </ul>
             </div>
             <fieldset class="col-lg-8">
                 <form method="post">
                     <i class="fas fa-gem me-3"></i><label class="form-label mb-3">Datos de usuario</label>
                     <div class="row">
                         <div class="form-floating mb-3 col-lg-6">
-                            <input type="text" class="form-control" name="txtID" id="txtID" value="<?php echo $datos_usuario['IdUsuario']; // el echo $datos_usuario['correo']; imprime dentro de los inputs los datos que se trae desde la BD
-                                                                                                    ?>" disabled>
+                            <input type="text" class="form-control" name="txtID" id="txtID" value="<?php echo $datos_usuario['IdUsuario']; // el echo $datos_usuario['correo']; imprime dentro de los inputs los datos que se trae desde la BD?>" disabled>
                             <label>ID</label>
                         </div>
                         <div class="form-floating mb-3 col-lg-6">

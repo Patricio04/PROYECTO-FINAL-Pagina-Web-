@@ -18,6 +18,17 @@ ob_start();
 $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-"; 
 // Esto sirve para redireccionar a la carpeta principal del proyecto (por el momento se llama "PROYECTO-FINAL-Pagina-Web-"), ['HTTP_HOST'] sirve para colocar al principio el nombre del host actual (por el momento el host es "localhost"), esto para que si lo llegamos a subir y le cambiamos el nombre al host por algo como "Tatsu.com" ahora este sea el nombre del HOST y no haya inconvenientes con páginas que no se ven porque el direccionamiento está incorrecto
 
+if (isset($_GET['cerrar_sesion'])) {
+    // Destruir todas las variables de sesión
+    session_unset();
+
+    // Destruir la sesión
+    session_destroy();
+
+    header("Location: ../index.php");
+    exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -96,10 +107,9 @@ $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-";
         <div class="avatar-container dropdown" style="position:relative; left:5px;">
             <img src="../Img/Usuario.png" alt="Avatar del usuario" class="avatar-img dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="nav-link link-light " href="<?php echo $url . '/Usuario/Mi cuenta.php'; ?>"> Ver perfil</a></li>
-                <li><a class="dropdown-item" href="#">Configuración</a></li>
+                <li><a class="dropdown-item" href="<?php echo $url . '/Usuario/Mi cuenta.php'; ?>">Configuración</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                <li><a class="dropdown-item" href="?cerrar_sesion">Cerrar sesión</a></li>
             </ul>
         </div>
     </div>

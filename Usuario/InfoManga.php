@@ -159,6 +159,19 @@ if ($id_manga > 0) {
         border-radius: 5px;
         cursor: pointer;
     }
+   
+
+    
+    .list-group-item {
+        transition: filter 0.3s ease;
+        /* Añadir una transición suave */
+    }
+
+    .list-group-item:hover {
+        filter: brightness(1.3);
+        /* Aumentar el brillo al pasar el ratón */
+    }
+
 </style>
 
 <div class="container mt-5">
