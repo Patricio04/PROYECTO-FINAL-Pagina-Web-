@@ -50,13 +50,65 @@ if ($id_manga > 0) {
         exit(); // Salir del script
     }
 
-    // Cerrar las conexiones
-    $stmt->close();
+    
     $stmt_capitulos->close();
 } else {
     echo "ID del manga no válido.";
     exit(); // Salir del script
 }
+
+
+    //Logica para añadir a favoritos
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+
+    if ($id_manga > 0 && !empty($id_usuario)) {
+        // Comprobar si el usuario tiene un plan con un ID diferente de 1
+        $sql_check = "SELECT IdPlan FROM Usuario WHERE IdUsuario = ?";
+        if ($stmt_check = $conn->prepare($sql_check)) {
+            $stmt_check->bind_param("i", $id_usuario);
+            $stmt_check->execute();
+            $stmt_check->bind_result($plan_id);
+            $stmt_check->fetch();
+            $stmt_check->close();
+
+            if ($plan_id != 1) {
+                // Preparar la consulta SQL para insertar en favorito
+                $sql = "INSERT INTO favorito (IdManga, IdUsuario) VALUES (?, ?)";
+
+                if ($stmt = $conn->prepare($sql)) {
+                    $stmt->bind_param("ii", $id_manga, $id_usuario);
+
+                    if ($stmt->execute()) {
+                        echo "
+                        <div class='alert alert-dismissible alert-info' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
+                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                        <strong>Ahora puedes encontrar este manga en tu seccion de favoritos!</strong></div>
+                        ";
+                    } else {
+                        echo "<div class='alert alert-dismissible alert-secondary' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
+                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                        <strong>Este manga ya se encuentra en tu seccion de favoritos!</strong></div>";
+                    }
+
+                    $stmt->close();
+                } else {
+                    echo "Error en la preparación de la consulta: " . $conn->error;
+                }
+            } else {
+                echo "<div class='alert alert-dismissible alert-warning' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
+                <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                <strong>Necesitas ser premium para utilizar esta funcion!</strong></div>";
+            }
+        } else {
+            echo "Error en la preparación de la consulta de verificación: " . $conn->error;
+        }
+    } else {
+        echo "ID de manga o usuario no válido.";
+    }
+}
+
+
 
 ?>
 <style>
@@ -82,14 +134,14 @@ if ($id_manga > 0) {
     }
 
     .btn-outline-primary {
-        color: #007bff;
-        border-color: #007bff;
+        color: whitesmoke;
+        border-color: whitesmoke;
     }
 
     .btn-outline-primary:hover {
-        color: white;
-        background-color: #007bff;
-        border-color: #007bff;
+        color: turquoise;
+        
+        border-color: turquoise;
     }
 
     /* Estilos para el contenedor de la tarjeta */
@@ -180,8 +232,11 @@ if ($id_manga > 0) {
             <div class="card-container"> <!-- Contenedor de la tarjeta -->
                 <div class="card shadow-sm d-flex flex-row card-neon">
                     <img src="<?php echo $manga['Portada']; ?>" class="card-img-top" alt="Imagen de manga">
-                    <div class="card-body d-flex flex-column justify-content-between">
+                    <div class="card-body d-flex flex-column justify-content-between text-start">
                         <h5 class="card-title"><?php echo $manga['Titulo']; ?></h5>
+                        <form action="" method="post">
+                        <button type="submit" class="btn btn-lg btn-outline-primary">Añadir a Favoritos</button>
+                        </form>
                         <p class="card-text"><?php echo $manga['Descripcion']; ?></p>
                         <div>
                             <?php foreach ($manga['etiquetas'] as $etiqueta) : ?>

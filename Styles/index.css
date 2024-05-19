@@ -59,7 +59,7 @@ body{
     margin-bottom: 10px;
     font-size: 18px;
 }
-
+/*
 .plan .btn {
     background-color: #007bff;
     color: #fff;
@@ -70,7 +70,7 @@ body{
     cursor: pointer;
     transition: background-color 0.3s;
 }
-
+*/
 .price {
     font-size: 32px;
     font-weight: bold;
@@ -99,7 +99,7 @@ body{
     left: 0;
     top: 0;
 }
-
+/*
 .btn {
     background-color: #007bff;
     color: #fff;
@@ -114,14 +114,16 @@ body{
     font-weight: bold;
     transition: background-color 0.3s;
 }
-
+*/
+/*
 .btn:hover {
     background-color: #0056b3;
 }
-
+*/
 .btn i {
     margin-right: 5px;
 }
+/*
 .btn-bg {
     position: absolute;
     top: 0;
@@ -133,11 +135,12 @@ body{
     transform-origin: right;
     transition: transform 0.3s;
 }
-
+*/
+/*
 .plan .btn:hover {
     background-color: #0056b3;
 }
-
+*/
 .animated-title {
     animation: bounce 1s infinite alternate; /* Aplica la animación "bounce" */
 }
@@ -273,6 +276,8 @@ body{
     -o-transition: box-shadow 0.3s ease;
 }
 /* Estilos para el icono de visualizaciones */
+
+
 .text-body-secondary {
     font-size: 1rem;
    
@@ -317,17 +322,18 @@ body{
     font-size: 0.8rem;
   font-style: normal;
 }
-
+/*
 .btn-outline-light {
     
     color: hsl(120, 3%, 6%);
     border-color: hsl(0, 0%, 80%);
 }
-
+*/
+/*
 .btn-outline-light:hover {
     background-color: hsl(0, 0%, 80%);
 }
-
+*/
 .text-body-secondary {
     
     color: hsl(0, 100%, 48%);

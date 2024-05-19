@@ -184,10 +184,7 @@ if ($resultado->num_rows > 0) {
                             </small>
 
 
-                            <small class="text-body-secondary" id="visualizations">
-                                <i class="far fa-heart favorite-icon"></i>
-                                <span id="visualizationCount"><?php echo $manga['visualizaciones']; ?></span>
-                            </small>
+                            
 
                         </div>
                     </div>

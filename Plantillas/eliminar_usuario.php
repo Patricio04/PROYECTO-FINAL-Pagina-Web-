@@ -7,18 +7,61 @@ $data = json_decode(file_get_contents('php://input'), true);
 if (isset($data['id'])) {
     $usuarioId = $data['id'];
 
-    // Preparar la consulta SQL para eliminar el usuario
-    $sql = "DELETE FROM Usuario WHERE IdUsuario = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $usuarioId);
+    // Iniciar una transacción
+    $conn->begin_transaction();
 
-    if ($stmt->execute()) {
+    try {
+        // Eliminar de la tabla Favorito
+        $sql = "DELETE FROM Favorito WHERE IdUsuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $usuarioId);
+        $stmt->execute();
+        $stmt->close();
+
+        // Eliminar de la tabla Tarjeta
+        $sql = "DELETE FROM Tarjeta WHERE IdUsuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $usuarioId);
+        $stmt->execute();
+        $stmt->close();
+
+        // Eliminar de la tabla Suscripcion
+        $sql = "DELETE FROM Suscripcion WHERE IdUsuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $usuarioId);
+        $stmt->execute();
+        $stmt->close();
+
+        // Eliminar de la tabla Comentario
+        $sql = "DELETE FROM Comentario WHERE IdUsuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $usuarioId);
+        $stmt->execute();
+        $stmt->close();
+
+        // Eliminar de la tabla Visualizacion
+        $sql = "DELETE FROM Visualizacion WHERE IdUsuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $usuarioId);
+        $stmt->execute();
+        $stmt->close();
+
+        // Finalmente, eliminar de la tabla Usuario
+        $sql = "DELETE FROM Usuario WHERE IdUsuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $usuarioId);
+        $stmt->execute();
+        $stmt->close();
+
+        // Si todas las eliminaciones fueron exitosas, confirmar la transacción
+        $conn->commit();
         echo json_encode(["success" => true]);
-    } else {
-        echo json_encode(["success" => false, "message" => "Error al eliminar el usuario."]);
+    } catch (Exception $e) {
+        // Si ocurrió algún error, deshacer la transacción
+        $conn->rollback();
+        echo json_encode(["success" => false, "message" => "Error al eliminar el usuario: " . $e->getMessage()]);
     }
 
-    $stmt->close();
 } else {
     echo json_encode(["success" => false, "message" => "ID de usuario no proporcionado."]);
 }
