@@ -13,6 +13,8 @@ if ($stmt_check = $conn->prepare($sql_check)) {
     $stmt_check->fetch();
     $stmt_check->close();
 
+    echo "El ID del plan del usuario es: " . $plan_id;
+
     if ($plan_id != 1) {
         $response['premium'] = true;
     }
