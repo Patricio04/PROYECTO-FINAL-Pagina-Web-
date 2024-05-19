@@ -111,31 +111,113 @@ if ($resultado->num_rows > 0) {
 
 
 ?>
+<style>
+        .open-modal-button {
+            background: linear-gradient(145deg, #00f6ff, #ff00e6);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 246, 255, 0.6);
+            margin-top: 20px;
+        }
+        .open-modal-button:hover {
+            background: linear-gradient(145deg, #ff00e6, #00f6ff);
+            box-shadow: 0 6px 20px rgba(255, 0, 230, 0.8);
+        }
+        .open-modal-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 3px 10px rgba(255, 0, 230, 0.5);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+        }
+        .modal-content {
+            background-color: #1a1a1a;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 4px 15px rgba(0, 246, 255, 0.6);
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: #ff00e6;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .filter-buttons, .sort-buttons {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-button, .sort-button, .sort-by-name-asc, .sort-by-name-desc, .reset-filters {
+            background: linear-gradient(145deg, #00f6ff, #ff00e6);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            margin: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 246, 255, 0.6);
+        }
+        .filter-button:hover, .sort-button:hover, .sort-by-name-asc:hover, .sort-by-name-desc:hover, .reset-filters:hover {
+            background: linear-gradient(145deg, #ff00e6, #00f6ff);
+            box-shadow: 0 6px 20px rgba(255, 0, 230, 0.8);
+        }
+        .filter-button:active, .sort-button:active, .sort-by-name-asc:active, .sort-by-name-desc:active, .reset-filters:active {
+            transform: scale(0.95);
+            box-shadow: 0 3px 10px rgba(255, 0, 230, 0.5);
+        }
+    </style>
+<button class="open-modal-button">Abrir Filtros</button>
 
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="filter-buttons" id="filters">
+                <!-- Botones de filtro por etiquetas -->
+                <button class="filter-button" data-filter="*">Mostrar todo</button>
 
+                <?php foreach ($etiquetas as $etiqueta) { ?>
+                <button class="filter-button" data-filter=".<?php echo $etiqueta['NombreEtiqueta'] ?>"><?php echo $etiqueta['NombreEtiqueta'] ?></button>
+                <?php } ?>
+                
+                <!-- Agrega más botones de filtro según tus etiquetas -->
+            </div>
 
-<div class="container">
-    <div class="filter-buttons" id="filters">
-        <!-- Botones de filtro por etiquetas -->
-        <button class="filter-button" data-filter="*">Mostrar todo</button>
+            <div class="sort-buttons" id="sorts">
+                <!-- Botones de ordenamiento por nombre ascendente y descendente -->
+                <button class="sort-by-name-asc" data-sort-by="name" data-sort-order="asc">Ordenar por nombre A-Z</button>
+                <button class="sort-by-name-desc" data-sort-by="name" data-sort-order="desc">Ordenar por nombre Z-A</button>
+                <!-- Botón de ordenamiento por visualizaciones -->
+                <button class="sort-button" data-sort-by="visualizations" data-sort-order="asc">Ordenar por visualizaciones (Ascendente)</button>
+                <button class="sort-button" data-sort-by="visualizations" data-sort-order="desc">Ordenar por visualizaciones (Descendente)</button>
+            </div>
 
-        <?php foreach ($etiquetas as $etiqueta) { ?>
-        <button class="filter-button" data-filter=".<?php echo $etiqueta['NombreEtiqueta'] ?>"><?php echo $etiqueta['NombreEtiqueta'] ?></button>
-        <?php } ?>
-        
-        <!-- Agrega más botones de filtro según tus etiquetas -->
+            <button class="reset-filters">Restablecer filtros y orden</button>
+        </div>
     </div>
-
-    <div class="sort-buttons" id="sorts">
-        <!-- Botones de ordenamiento por nombre ascendente y descendente -->
-        <button class="sort-by-name-asc" data-sort-by="name" data-sort-order="asc">Ordenar por nombre A-Z</button>
-        <button class="sort-by-name-desc" data-sort-by="name" data-sort-order="desc">Ordenar por nombre Z-A</button>
-        <!-- Botón de ordenamiento por visualizaciones -->
-        <button class="sort-button" data-sort-by="visualizations" data-sort-order="asc">Ordenar por visualizaciones (Ascendente)</button>
-        <button class="sort-button" data-sort-by="visualizations" data-sort-order="desc">Ordenar por visualizaciones (Descendente)</button>
-    </div>
-
-    <button class="reset-filters">Restablecer filtros y orden</button>
 
     <!-- Tarjetas de mangas -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-5" id="manga-container">
@@ -206,6 +288,23 @@ include '../Plantillas/Footer.php';
 <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
 
 <script>
+     var modal = document.getElementById("myModal");
+        var btn = document.querySelector(".open-modal-button");
+        var span = document.querySelector(".close");
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     window.onload = function() {
         // init isotope
         var $listing = $('.row').isotope({
