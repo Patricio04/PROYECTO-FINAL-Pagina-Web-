@@ -5,11 +5,9 @@ include '../Plantillas/Header.php';
 $favoritos = [
     ['titulo' => 'Manga 1', 'imagen' => '../Img/Diamante.png'],
     ['titulo' => 'Manga 2', 'imagen' => 'https://m.media-amazon.com/images/M/MV5BZjE0YjVjODQtZGY2NS00MDcyLThhMDAtZGQwMTZiOWNmNjRiXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_FMjpg_UX1000_.jpg'],
-    ['titulo' => 'Manga 3', 'imagen' => 'manga3.jpg'],
-    // Puedes agregar más mangas favoritos según sea necesario
+    ['titulo' => 'Manga 3', 'imagen' => 'tuuu.jpg'],
 ];
 ?>
-<!-- Contenido principal -->
 <style>
     /* Estilos de la tarjeta y elementos adicionales */
     .cyberpunk-card {
