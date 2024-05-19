@@ -198,36 +198,281 @@ if ($id_manga > 0) {
             </ul>
         </div>
     </div>
-    <br>
 
-    <button class="show-comments-btn" onclick="showComments()">Mostrar comentarios</button>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+        .comments-section-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .comments-section {
+            width: 100%;
+            max-width: 600px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .comments-section h2 {
+            color: #6f42c1;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .comment {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .comment-author {
+            font-weight: bold;
+        }
+        .comment-content {
+            margin-top: 5px;
+        }
+        .comment-date {
+            font-size: 0.9em;
+            color: #777;
+        }
+        #commentForm {
+            margin-bottom: 20px;
+        }
+        #commentForm label {
+            display: block;
+            margin-top: 10px;
+        }
+        #commentForm input, #commentForm textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #commentForm button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #6f42c1;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #commentForm button:hover {
+            background-color: #5a379c;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .user-info img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .user-info span {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .show-comments-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #6f42c1;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .show-comments-btn:hover {
+            background-color: #5a379c;
+        }
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 350px;
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+            max-width: 400px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .avatar-option {
+            display: inline-block;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .avatar-option img {
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+        }
+    </style>
+</head>
+<body>
 
-    <div class="comments-section" id="commentsSection">
-        <h2 style="color: #6f42c1;">Comentarios</h2>
-        <div class="comment">
-            <div class="comment-author">Usuario 1</div>
-            <div class="comment-content">¡Me encantó este capítulo!</div>
-            <div class="comment-date">Publicado el 10 de mayo de 2024</div>
+<button class="show-comments-btn" onclick="toggleComments()">Mostrar comentarios</button>
+
+<div class="comments-section-container">
+    <div class="comments-section" id="commentsSection" style="display:none;">
+        <div class="user-info">
+            <img src="avatar1.png" alt="Avatar" id="userAvatar" onclick="openModal()">
+            <span id="userName">Nombre del Usuario</span>
         </div>
-        <div class="comment">
-            <div class="comment-author">Usuario 2</div>
-            <div class="comment-content">Prueba comentarios xdd xd xd</div>
-            <div class="comment-date">Publicado el 11 de mayo de 2024</div>
+        <h2>Comentarios</h2>
+        
+        <!-- Formulario para agregar nuevos comentarios -->
+        <h3 style="color: #6f42c1;">Añadir un comentario</h3>
+        <form id="commentForm" onsubmit="addComment(event)">
+            <!-- El campo de nombre se oculta ya que viene de la base de datos -->
+            <input type="hidden" id="author" name="author" value="Nombre del Usuario">
+            <label for="content">Comentario:</label>
+            <textarea id="content" name="content" required></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+
+        <div id="commentsContainer">
+            <div class="comment">
+                <div class="comment-author">Usuario 1</div>
+                <div class="comment-content">¡Me encantó este capítulo!</div>
+                <div class="comment-date">Publicado el 10 de mayo de 2024</div>
+            </div>
+            <div class="comment">
+                <div class="comment-author">Usuario 2</div>
+                <div class="comment-content">Prueba comentarios xdd xd xd</div>
+                <div class="comment-date">Publicado el 11 de mayo de 2024</div>
+            </div>
         </div>
-        <!-- Agregar más comentarios según sea necesario -->
     </div>
 </div>
 
+<!-- Modal para seleccionar avatar -->
+<div id="avatarModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Selecciona tu avatar</h2>
+        <div class="avatar-option" onclick="selectAvatar('avatar4.jpg')">
+            <img src="avatar1.png" alt="Avatar 1">
+        </div>
+        <div class="avatar-option" onclick="selectAvatar('avatar1.jpeg')">
+            <img src="avatar2.png" alt="Avatar 2">
+        </div>
+        <div class="avatar-option" onclick="selectAvatar('avatar3.png')">
+            <img src="avatar3.png" alt="Avatar 3">
+        </div>
+        <div class="avatar-option" onclick="selectAvatar('avatar4.png')">
+            <img src="avatar4.png" alt="Avatar 4">
+        </div>
+    </div>
 </div>
+
 <script>
-    function showComments() {
-        var commentsSection = document.getElementById("commentsSection");
-        if (commentsSection.style.display === "none") {
-            commentsSection.style.display = "block";
-        } else {
-            commentsSection.style.display = "none";
-        }
+
+
+// Para base de datos funcionalidad 
+const loggedInUser = "Nombre del Usuario"; // Este valor vendría de la base de datos
+document.getElementById('author').value = loggedInUser;
+document.getElementById('userName').textContent = loggedInUser;
+
+function toggleComments() {
+    const commentsSection = document.getElementById('commentsSection');
+    const btn = document.querySelector('.show-comments-btn');
+    if (commentsSection.style.display === 'none') {
+        commentsSection.style.display = 'block';
+        btn.textContent = 'Ocultar comentarios';
+    } else {
+        commentsSection.style.display = 'none';
+        btn.textContent = 'Mostrar comentarios';
     }
+}
+
+function addComment(event) {
+    event.preventDefault();
+
+    const author = loggedInUser;
+    const content = document.getElementById('content').value;
+    const date = new Date().toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    const commentSection = document.getElementById('commentsContainer');
+
+    const newComment = document.createElement('div');
+    newComment.classList.add('comment');
+
+    const newCommentAuthor = document.createElement('div');
+    newCommentAuthor.classList.add('comment-author');
+    newCommentAuthor.textContent = author;
+
+    const newCommentContent = document.createElement('div');
+    newCommentContent.classList.add('comment-content');
+    newCommentContent.textContent = content;
+
+    const newCommentDate = document.createElement('div');
+    newCommentDate.classList.add('comment-date');
+    newCommentDate.textContent = `Publicado el ${date}`;
+
+    newComment.appendChild(newCommentAuthor);
+    newComment.appendChild(newCommentContent);
+    newComment.appendChild(newCommentDate);
+
+    commentSection.appendChild(newComment);
+
+    // Clear the form
+    document.getElementById('commentForm').reset();
+}
+
+function openModal() {
+    document.getElementById('avatarModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('avatarModal').style.display = 'none';
+}
+
+function selectAvatar(avatarSrc) {
+    document.getElementById('userAvatar').src = avatarSrc;
+    closeModal();
+}
 </script>
 <?php
 // Incluye el footer

@@ -82,7 +82,10 @@ $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-";
           <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
           <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
         </div>
-        <!-- Grid column -->
+        <div class="text-center p-4">
+    © 2024 Copyright:
+    <a class="text-reset fw-bold" href="#">MDBootstrap.com</a>
+  </div>
       </div>
       <!-- Grid row -->
     </div>
@@ -90,12 +93,11 @@ $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-";
   <!-- Section: Links  -->
 
   <!-- Copyright -->
-  <div class="text-center p-4">
-    © 2024 Copyright:
-    <a class="text-reset fw-bold" href="#">MDBootstrap.com</a>
-  </div>
+ 
   <!-- Copyright -->
 </footer>
+<script src="scripts/script.js"></script>
+<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
 
 <script src="https://kit.fontawesome.com/9319846bc5.js" crossorigin="anonymous"></script> 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -103,7 +105,12 @@ $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-";
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
 <script src="<?php echo $url . '/Scrips/biblioteca.js';?>"></script>
 
 <script  src="<?php echo $url . '/Scrips/Estetica.js';?>" ></script>
 
+
+</body>
+
+</html>
