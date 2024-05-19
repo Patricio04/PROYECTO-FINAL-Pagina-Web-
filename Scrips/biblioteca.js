@@ -33,7 +33,7 @@ function loadGenresFromDatabase() {
 
 window.onload = loadGenresFromDatabase;
 */
-
+/*
 function loadGenresFromDatabase() {
     // Hacer una solicitud AJAX para base de datos
     fetch('../Scrips/dbgenero.php')
@@ -71,7 +71,7 @@ function loadGenresFromDatabase() {
 }
 
 window.onload = loadGenresFromDatabase;
-
+*/
 
 
 

@@ -1,9 +1,18 @@
+<?php
+$url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-"; 
+// Esto sirve para redireccionar a la carpeta principal del proyecto (por el momento se llama "PROYECTO-FINAL-Pagina-Web-"), ['HTTP_HOST'] sirve para colocar al principio el nombre del host actual (por el momento el host es "localhost"), esto para que si lo llegamos a subir y le cambiamos el nombre al host por algo como "Tatsu.com" ahora este sea el nombre del HOST y no haya inconvenientes con páginas que no se ven porque el direccionamiento está incorrecto
+
+?>
+<!-- Footer --> <!-- https://kit.fontawesome.com/9319846bc5.js, nos permite traer iconos con una clase en lugar de guardarlos como imagenes -->
+
+
+
 <!-- Footer -->
 <footer class="text-center text-lg-start  text-muted" id="Footer">
 
 
   <!-- Section: Links  -->
-  <section class="">
+  <div class="">
     <div class="container text-center text-md-start mt-5">
       <!-- Grid row -->
       <div class="row mt-3">
@@ -77,7 +86,7 @@
       </div>
       <!-- Grid row -->
     </div>
-  </section>
+  </d>
   <!-- Section: Links  -->
 
   <!-- Copyright -->
@@ -87,14 +96,7 @@
   </div>
   <!-- Copyright -->
 </footer>
-<?php
-$url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-"; 
-// Esto sirve para redireccionar a la carpeta principal del proyecto (por el momento se llama "PROYECTO-FINAL-Pagina-Web-"), ['HTTP_HOST'] sirve para colocar al principio el nombre del host actual (por el momento el host es "localhost"), esto para que si lo llegamos a subir y le cambiamos el nombre al host por algo como "Tatsu.com" ahora este sea el nombre del HOST y no haya inconvenientes con páginas que no se ven porque el direccionamiento está incorrecto
 
-?>
-
-
-<!-- Footer --> <!-- https://kit.fontawesome.com/9319846bc5.js, nos permite traer iconos con una clase en lugar de guardarlos como imagenes -->
 <script src="https://kit.fontawesome.com/9319846bc5.js" crossorigin="anonymous"></script> 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -104,6 +106,4 @@ $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-";
 <script src="<?php echo $url . '/Scrips/biblioteca.js';?>"></script>
 
 <script  src="<?php echo $url . '/Scrips/Estetica.js';?>" ></script>
-</body>
 
-</html>

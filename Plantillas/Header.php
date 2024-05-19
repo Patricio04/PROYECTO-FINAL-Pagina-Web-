@@ -57,7 +57,7 @@ $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-";
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ul-center">
-                <img class="container-ul-img-sb" src="./Img/sombra.png" alt="">
+                <img class="container-ul-img-sb" src="" alt="">
                 <li class="nav-item">
                     <a class="nav-link link-light" href="<?php echo $url . '/Usuario/biblioteca.php'; ?>">Directorio de Mangas</a>
                 </li>
@@ -67,7 +67,7 @@ $url="http://".$_SERVER['HTTP_HOST']."/PROYECTO-FINAL-Pagina-Web-";
                     </a>
                 </li>
                 <li class="nav-item tm">
-                    <a class="nav-link link-red link-light" href="<?php echo $url; ?>">Favoritos</a>
+                    <a class="nav-link link-red link-light" href="<?php echo $url . '/Usuario/favoritos.php'; ?>">Favoritos</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle link-light" href="#" role="button"

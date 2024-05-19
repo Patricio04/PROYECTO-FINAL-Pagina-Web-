@@ -44,28 +44,44 @@ if (isset($_POST['id_manga'])) {
     // Obtener el ID de usuario de la sesión
     $id_usuario = $_SESSION['IdUsuario'];
 
-    // Preparar la consulta SQL
-    $sql = "INSERT INTO Visualizacion (IdUsuario, IdManga) VALUES (?, ?)";
+    // Iniciar la transacción
+    $conn->begin_transaction();
 
-    // Preparar la sentencia
-    if ($stmt = $conn->prepare($sql)) {
-        // Vincular los parámetros
-        $stmt->bind_param("ii", $id_usuario, $id_manga);
+    try {
+        // Preparar la consulta para insertar una nueva visualización
+        $sql_insert = "INSERT INTO Visualizacion (IdUsuario, IdManga) VALUES (?, ?)";
+        $stmt_insert = $conn->prepare($sql_insert);
+        $stmt_insert->bind_param("ii", $id_usuario, $id_manga);
 
-        // Ejecutar la consulta
-        if ($stmt->execute()) {
-            // La inserción se realizó correctamente
-            echo "";
-        } else {
-            // Error al ejecutar la consulta
-            echo "Error al insertar la visualización en la base de datos: " . $stmt->error;
+        // Ejecutar la consulta de inserción
+        if (!$stmt_insert->execute()) {
+            throw new Exception("Error al insertar la visualización en la base de datos: " . $stmt_insert->error);
         }
 
-        // Cerrar la sentencia
-        $stmt->close();
-    } else {
-        // Error al preparar la consulta
-        echo "Error al preparar la consulta: " . $conn->error;
+        // Preparar la consulta para actualizar el contador de visualizaciones del manga
+        $sql_update = "UPDATE Manga SET Visualizaciones = Visualizaciones + 1 WHERE IdManga = ?";
+        $stmt_update = $conn->prepare($sql_update);
+        $stmt_update->bind_param("i", $id_manga);
+
+        // Ejecutar la consulta de actualización
+        if (!$stmt_update->execute()) {
+            throw new Exception("Error al actualizar el contador de visualizaciones del manga: " . $stmt_update->error);
+        }
+
+        // Confirmar la transacción
+        $conn->commit();
+
+        // Redirigir a la página InfoManga.php con el ID del manga
+        header("Location: InfoManga.php?id_manga=" . $id_manga);
+        exit();
+    } catch (Exception $e) {
+        // Revertir la transacción en caso de error
+        $conn->rollback();
+        echo $e->getMessage();
+    } finally {
+        // Cerrar las sentencias
+        if (isset($stmt_insert)) $stmt_insert->close();
+        if (isset($stmt_update)) $stmt_update->close();
     }
 } else {
     // No se ha definido el ID del manga en $_POST
@@ -73,47 +89,76 @@ if (isset($_POST['id_manga'])) {
 }
 
 
+// Consulta SQL para obtener los datos de la tabla "etiquetas"
+$sql = "SELECT * FROM Etiqueta;";
+
+// Ejecutar la consulta
+$resultado = $conn->query($sql);
+
+// Verificar si hay resultados
+if ($resultado->num_rows > 0) {
+    // Crear un array para almacenar los datos de las etiquetas
+    $etiquetas = array();
+
+    // Recorrer los resultados y guardarlos en el array
+    while ($fila = $resultado->fetch_assoc()) {
+        $etiquetas[] = $fila;
+    }
+} else {
+    // Si no hay resultados, mostrar un mensaje
+    echo "<p>No se encontraron etiquetas.</p>";
+}
+
 
 ?>
 
 
 
 <div class="container">
-    <h1 class="my-4">Biblioteca de Mangas</h1>
+    <div class="filter-buttons" id="filters">
+        <!-- Botones de filtro por etiquetas -->
+        <button class="filter-button" data-filter="*">Mostrar todo</button>
 
-    <!-- Botones de filtros -->
-    <div class="mb-4" id="filterButtons">
-        <!-- Los botones de filtro se generarán dinámicamente aquí -->
+        <?php foreach ($etiquetas as $etiqueta) { ?>
+        <button class="filter-button" data-filter=".<?php echo $etiqueta['NombreEtiqueta'] ?>"><?php echo $etiqueta['NombreEtiqueta'] ?></button>
+        <?php } ?>
+        
+        <!-- Agrega más botones de filtro según tus etiquetas -->
     </div>
 
-    <!-- Botón de filtro personalizado -->
-    <div class="mb-4">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">Filtrar</button>
+    <div class="sort-buttons" id="sorts">
+        <!-- Botones de ordenamiento por nombre ascendente y descendente -->
+        <button class="sort-by-name-asc" data-sort-by="name" data-sort-order="asc">Ordenar por nombre A-Z</button>
+        <button class="sort-by-name-desc" data-sort-by="name" data-sort-order="desc">Ordenar por nombre Z-A</button>
+        <!-- Botón de ordenamiento por visualizaciones -->
+        <button class="sort-button" data-sort-by="visualizations" data-sort-order="asc">Ordenar por visualizaciones (Ascendente)</button>
+        <button class="sort-button" data-sort-by="visualizations" data-sort-order="desc">Ordenar por visualizaciones (Descendente)</button>
     </div>
+
+    <button class="reset-filters">Restablecer filtros y orden</button>
 
     <!-- Tarjetas de mangas -->
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-5" id="manga-container">
         <?php foreach ($datosmangas as $manga) : ?>
-           <!-- <a href="./InfoManga.php" class="text-decoration-none" onclick="document.getElementById('miFormulario').submit(); return false;">-->
+            <!-- <a href="./InfoManga.php" class="text-decoration-none" onclick="document.getElementById('miFormulario').submit(); return false;">-->
 
-                <!-- Aquí puedes agregar tus tarjetas de mangas -->
-                <div class="col manga-card" data-etiquetas="<?php echo implode(',', $manga['etiquetas']); ?>">
-                    <div class="card shadow-sm position-relative">
-                        <div class="title-container">
-                            <h5 class="card-header"><?php echo $manga['titulo']; ?></h5>
-                            
-                        </div>
+            <!-- Aquí puedes agregar tus tarjetas de mangas -->
+            <div class="col manga-card" data-etiquetas="<?php echo implode(' ', $manga['etiquetas']); ?>">
+                <div class="card shadow-sm position-relative">
+                    <div class="title-container">
+                        <h5 class="card-header" id="TituloManga"><?php echo $manga['titulo']; ?></h5>
 
-                        <img src="<?php echo $manga['portada']; ?>" class="card-img-top" alt="Imagen de manga" style="width: 100%; height: 200px;">
-                        <div class="card-body">
-                            <p class="card-text"><?php //echo $manga['descripcion']; 
-                                                    ?></p>
+                    </div>
 
-                            <?php foreach ($manga['etiquetas'] as $etiqueta) : ?>
-                                <span class="badge rounded-pill btn btn-outline-info mb-3"><?php //echo $etiqueta; 
-                                                                                            ?></span>
-                            <?php endforeach; ?>
-                            <!--
+                    <img src="<?php echo $manga['portada']; ?>" class="card-img-top" alt="Imagen de manga" style="width: 100%; height: 200px;">
+                    <div class="card-body">
+                        <p class="card-text"><?php //echo $manga['descripcion']; 
+                                                ?></p>
+
+                        <?php foreach ($manga['etiquetas'] as $etiqueta) : ?>
+                            <span class="badge rounded-pill btn btn-outline-info mb-3" value="<?php //echo $etiqueta; ?>"></span>
+                        <?php endforeach; ?>
+                        <!--
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Comedia</span>
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Terror</span>
                             <span class="badge rounded-pill btn btn-outline-info mb-3">Escolar</span>
@@ -124,79 +169,92 @@ if (isset($_POST['id_manga'])) {
                         -->
 
 
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <form method="POST" id="miFormulario">
-                                        <input type="hidden" class="id-manga" name="id_manga" value="<?php echo $manga['id']; ?>">
-                                        
-                                        <button type="submit" class="btn btn-sm btn-outline-light comenzar-leer">Comenzar a leer</button>
-                                    
-                                    </form>
-                                </div>
-                                <small class="text-body-secondary" id="visualizations">
-                                    <i class="fas fa-eye"></i> <!-- Icono del ojo -->
-                                    <span id="visualizationCount"><?php echo $manga['visualizaciones']; ?></span>
-                                </small>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <form method="POST" id="miFormulario">
+                                    <input type="hidden" class="id-manga" name="id_manga" value="<?php echo $manga['id']; ?>">
 
-                                
-                                <small class="text-body-secondary" id="visualizations">
-                                <i class="far fa-heart favorite-icon"></i>
-                                    <span id="visualizationCount"><?php echo $manga['visualizaciones']; ?></span>
-                                </small>
+                                    <button type="submit" class="btn btn-sm btn-outline-light comenzar-leer">Comenzar a leer</button>
 
+                                </form>
                             </div>
+                            <small class="text-body-secondary" id="visualizations">
+                                <i class="fas fa-eye"></i> <!-- Icono del ojo -->
+                                <span class="visualizationCount"><?php echo $manga['visualizaciones']; ?></span>
+                            </small>
+
+
+                            <small class="text-body-secondary" id="visualizations">
+                                <i class="far fa-heart favorite-icon"></i>
+                                <span id="visualizationCount"><?php echo $manga['visualizaciones']; ?></span>
+                            </small>
+
                         </div>
                     </div>
                 </div>
-           <!-- </a> -->
+            </div>
+            <!-- </a> -->
             <!-- Agrega más tarjetas de mangas según necesites -->
         <?php endforeach; ?>
     </div>
 
 
-    <!-- Paginación -->
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center mt-4">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-            </li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Siguiente</a>
-            </li>
-        </ul>
-    </nav>
+
 </div>
-
-
-
-<!-- Modal de filtro -->
-<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="filterModalLabel">Filtrar Mangas</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h6>Géneros</h6>
-                <div class="mb-3">
-
-
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="BotonFiltrar">Aplicar Filtros</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <?php
 include '../Plantillas/Footer.php';
 ?>
+
+<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+
+<script>
+    window.onload = function() {
+        // init isotope
+        var $listing = $('.row').isotope({
+            itemSelector: '.col',
+            layoutMode: 'fitRows',
+            getSortData: {
+                name: '.card-header',
+                visualizations: '[data-visualizations] parseInt'
+            }
+        });
+
+        // bind filter button click
+        $("#filters").on("click", "button", function() {
+            var filterValue = $(this).attr('data-filter');
+            if (filterValue === '*') {
+                $listing.isotope({ filter: '*' });
+            } else {
+                $listing.isotope({
+                    filter: function() {
+                        var etiquetas = $(this).attr('data-etiquetas').split(' ');
+                        return etiquetas.includes(filterValue.substring(1)); // Remove the dot from filterValue
+                    }
+                });
+            }
+        });
+
+        // bind sort button click
+        $("#sorts").on("click", "button", function() {
+            var sortValue = $(this).attr('data-sort-by');
+            var sortOrder = $(this).attr('data-sort-order') === 'asc';
+            $listing.isotope({
+                sortBy: sortValue,
+                sortAscending: sortOrder
+            });
+        });
+
+        // bind reset button click
+        $(".reset-filters").on("click", function() {
+            // reset filters and sort order
+            $listing.isotope({
+                filter: '*',
+                sortBy: 'original-order'
+            });
+        });
+    };
+</script>
+
+    
+</body>
