@@ -143,9 +143,7 @@ if ($resultado->num_rows > 0) {
                                         <a href="./Gestion de planes formulario update.php?id=<?php echo $plan['IdPlan']; ?>" class="text-white">
                                             <i class="fa-solid fa-pen-to-square fa-xl m-3"></i>
                                         </a>
-                                        <a href="" class="text-white ancoreborrar" data-id="<?php echo $plan['IdPlan']; ?>">
-                                            <i class="fa-solid fa-ban fa-lg m-3"></i>
-                                        </a>
+                                        
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -206,7 +204,7 @@ if ($resultado->num_rows > 0) {
                         event.preventDefault();
 
                         const planId = this.getAttribute('data-id');
-                        const confirmed = confirm('¿Estás seguro de que deseas eliminar este plan?');
+                        const confirmed = confirm('¿Estás seguro de que deseas descontinuar este plan?');
 
                         if (confirmed) {
                             fetch('../Plantillas/eliminar_planes.php', {
@@ -241,6 +239,52 @@ if ($resultado->num_rows > 0) {
             table.on('draw', function() {
                 attachDeleteEvent();
             });
+
+
+            function attachActivateEvent() {
+                const activateLinks = document.querySelectorAll('.ancoreactivar');
+
+                activateLinks.forEach(function(link) {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault();
+
+                        const planId = this.getAttribute('data-id');
+                        const confirmed = confirm('¿Estás seguro de que deseas reactivar este plan?');
+
+                        if (confirmed) {
+                            fetch('../Plantillas/activar_planes.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        id: planId
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        alert('Plan activado correctamente.');
+                                    } else {
+                                        alert('Error al activar el plan: ' + data.message);
+                                    }
+                                })
+                                .catch(error => console.error('Error:', error));
+                        } else {
+                            console.log('Activación del plan cancelada.');
+                        }
+                    });
+                });
+            }
+
+            // Attach event listeners for activating plans on initial load
+            attachActivateEvent();
+
+            // Attach event listeners for activating plans on every draw event
+            table.on('draw', function() {
+                attachActivateEvent();
+            });
+
         });
     </script>
 

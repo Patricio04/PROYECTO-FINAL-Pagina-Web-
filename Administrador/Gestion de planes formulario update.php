@@ -39,12 +39,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombrePlan = $_POST['txtnombre'];
     $descripcion = $_POST['txtareadescripcion'];
     $precio = floatval($_POST['txtprecio']);
+    $activo = $_POST['txtactivo'];
 
-    $sql = "UPDATE Planes SET TituloPlan = ?, DescripcionPlan = ?, PrecioPlan = ? WHERE IdPlan = ?";
+    $sql = "UPDATE Planes SET TituloPlan = ?, DescripcionPlan = ?, PrecioPlan = ? , Activo = ? WHERE IdPlan = ?";
     $stmt = $conn->prepare($sql);
 
     // Vincular parámetros y ejecutar la consulta
-    $stmt->bind_param("ssdi", $nombrePlan, $descripcion, $precio, $idPlan);
+    $stmt->bind_param("ssdsi", $nombrePlan, $descripcion, $precio, $activo , $idPlan);
 
     if ($stmt->execute()) {
         // Redirigir después de la actualización
@@ -172,6 +173,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <h5>Precio del nuevo plan</h5>
                 </label>
                 <input type="text" class="form-control" id="txtprecio" name="txtprecio" value="<?php echo $planes ? htmlspecialchars($planes['PrecioPlan']) : ''; ?>" required placeholder="Ingresar descripcion">
+
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-7 mb-3">
+                <label for="validationCustom02" class="form-label">
+                    <h5>Activo / Descontinuado (1 | 0)</h5>
+                </label>
+                <input type="text" class="form-control" id="txtprecio" name="txtactivo" value="<?php echo $planes ? htmlspecialchars($planes['Activo']) : ''; ?>" required placeholder="Ingresar descripcion">
 
             </div>
         </div>

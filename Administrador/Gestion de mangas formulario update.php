@@ -223,9 +223,7 @@ if ($idManga > 0) {
         </div>
 
 
-        <div class="col-12">
-            falta decidir si colocar aqui el formulario de los capitulos y el contenido_capitulos o separarlos (ya que si no hay un manga creado antes no pueden existir capitulos, y sin capitulos no pueden existir contenido de capitulos)
-        </div>
+        
         <div class="col-12 mt-5">
             <button class="btn btn-primary" type="submit">Actualizar manga</button>
         </div>
