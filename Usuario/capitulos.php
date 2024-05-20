@@ -55,7 +55,42 @@ if ($stmt_capitulo = $conn->prepare($sql_capitulo)) {
 }
 
 
+// Consulta SQL para obtener los ID de los capítulos para el manga especificado
+$sql = "SELECT IdCapitulo FROM Capitulo WHERE IdManga = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id_manga);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Array para almacenar los ID de los capítulos
+$listaCapitulos = array();
+
+// Recorrer los resultados y almacenar los ID de los capítulos en el array
+while ($row = $result->fetch_assoc()) {
+    $listaCapitulos[] = $row['IdCapitulo'];
+}
+
+
+// Liberar los recursos y cerrar la consulta
+$stmt->close();
+
+
+
+
+//para la nav entre capitulos
+
+
+
+
+
+
 ?>
+
+
+
+
+
+
 <style>
     .container {
         max-width: 1200px;
@@ -88,21 +123,22 @@ if ($stmt_capitulo = $conn->prepare($sql_capitulo)) {
     }
 
     .chapter-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0; /* Espaciado opcional alrededor del contenido */
-        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+        /* Espaciado opcional alrededor del contenido */
+    }
 
     .chapter-content img {
         text-align: center;
         margin-bottom: 30px;
-        
-            max-width: 800px;
-            max-height: 600px;
-            width: auto;
-            height: auto;
-        
+
+        max-width: 800px;
+        max-height: 600px;
+        width: auto;
+        height: auto;
+
     }
 
     .next-chapter-button {
@@ -207,13 +243,8 @@ if ($stmt_capitulo = $conn->prepare($sql_capitulo)) {
 <div class="container">
     <div class="chapter-container">
         <div class="chapter-menu">
-            <div class="chapter-list">
-                <div class="chapter-item">Capítulo 1</div>
-                <div class="chapter-item">Capítulo 2</div>
-                <div class="chapter-item">Capítulo 3</div>
-                <!-- Agregar más capítulos según sea necesario -->
-            </div>
-            <a href="#" class="general-info-link"><i class="fas fa-home"></i> Información General del Manga</a>
+            
+            <a href="InfoManga.php?id_manga=<?php echo $id_manga; ?>" class="general-info-link"><i class="fas fa-home"></i> Información General del Manga</a>
         </div>
         <h1 class="chapter-title"><?php echo htmlspecialchars($titulo_manga); ?>: <?php echo htmlspecialchars($nombre_capitulo); ?></h1>
         <?php if (!empty($contenidos)) : ?>
@@ -224,14 +255,46 @@ if ($stmt_capitulo = $conn->prepare($sql_capitulo)) {
                 </div>
             <?php endforeach; ?>
         <?php else : ?>
-            <p>No hay contenido disponible para este capítulo.</p>
+            
         <?php endif; ?>
         <br>
         <!-- Botón para el capítulo anterior -->
-        <button class="previous-chapter-button"><i class="fas fa-arrow-left"></i> Capítulo Anterior</button>
-        <!-- Botón para ir al siguiente capítulo -->
-        <button class="next-chapter-button">Siguiente Capítulo <i class="fas fa-arrow-right"></i></button>
-    </div>
-</div <?php
-        include '../Plantillas/Footer.php';
+
+        <?php
+        // Enlace al capítulo anterior si está disponible
+        $idCapituloAnterior = null;
+        $idCapituloSiguiente = null;
+
+        // Buscar el índice del capítulo actual en la lista de capítulos
+        $indiceCapituloActual = array_search($id_capitulo, $listaCapitulos);
+        if ($indiceCapituloActual !== false) {
+            // Determinar el índice del capítulo anterior y siguiente
+            $indiceCapituloAnterior = $indiceCapituloActual - 1;
+            $indiceCapituloSiguiente = $indiceCapituloActual + 1;
+
+            // Obtener el ID del capítulo anterior si existe
+            if (isset($listaCapitulos[$indiceCapituloAnterior])) {
+                $idCapituloAnterior = $listaCapitulos[$indiceCapituloAnterior];
+            }
+
+            // Obtener el ID del capítulo siguiente si existe
+            if (isset($listaCapitulos[$indiceCapituloSiguiente])) {
+                $idCapituloSiguiente = $listaCapitulos[$indiceCapituloSiguiente];
+            }
+        }
         ?>
+        <?php if ($idCapituloAnterior !== null) : ?>
+            <a href="capitulos.php?id_manga=<?php echo $id_manga; ?>&id_capitulo=<?php echo $idCapituloAnterior; ?>" class="previous-chapter-button text-decoration-none"><i class="fas fa-arrow-left"></i> Capítulo Anterior</a>
+        <?php endif; ?>
+        <!-- Botón para ir al siguiente capítulo -->
+        <?php if ($idCapituloSiguiente !== null) : ?>
+            <a href="capitulos.php?id_manga=<?php echo $id_manga; ?>&id_capitulo=<?php echo $idCapituloSiguiente; ?>" class="next-chapter-button text-decoration-none">Siguiente Capítulo <i class="fas fa-arrow-right"></i></a>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+
+<?php
+include '../Plantillas/Footer.php';
+?>
