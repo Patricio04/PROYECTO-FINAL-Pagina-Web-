@@ -48,7 +48,8 @@ if (isset($_GET['cerrar_sesion'])) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 </head>
@@ -79,7 +80,7 @@ if (isset($_GET['cerrar_sesion'])) {
                             </a>
                         </li>
                         <li class="nav-item tm">
-                            <a id="favoritos-link" class="nav-link link-red link-light" href="#">Favoritos</a>
+                            <a id="favoritos-link" class="nav-link link-red link-light" href="<?php echo $url . '/Usuario/favoritos.php'; ?>">Favoritos</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -118,28 +119,7 @@ if (isset($_GET['cerrar_sesion'])) {
                 </div>
             </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            $('#favoritos-link').on('click', function(e) {
-                e.preventDefault();
 
-                $.ajax({
-                    url: '../Plantillas/check_plan.php',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.premium) {
-                            window.location.href = '<?php echo $url . '/Usuario/favoritos.php'; ?>';
-                        } else {
-                            window.location.href = 'biblioteca.php';
-                        }
-                    },
-                    error: function() {
-                        alert('Error al comprobar el plan del usuario.');
-                    }
-                });
-            });
-        });
-    </script>
+
 
     </nav>

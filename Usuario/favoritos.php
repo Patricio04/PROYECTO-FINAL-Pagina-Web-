@@ -1,12 +1,102 @@
 <?php
 include '../Assets/Bases de datos/db.php';
 include '../Plantillas/Header.php';
-//Como Prueba
-$favoritos = [
-    ['titulo' => 'Manga 1', 'imagen' => '../Img/Diamante.png'],
-    ['titulo' => 'Manga 2', 'imagen' => 'https://m.media-amazon.com/images/M/MV5BZjE0YjVjODQtZGY2NS00MDcyLThhMDAtZGQwMTZiOWNmNjRiXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_FMjpg_UX1000_.jpg'],
-    ['titulo' => 'Manga 3', 'imagen' => 'tuuu.jpg'],
-];
+
+
+
+// Comprobación del plan del usuario
+$sql_check_plan = "SELECT IdPlan FROM Usuario WHERE IdUsuario = ?";
+$stmt_check_plan = $conn->prepare($sql_check_plan);
+$stmt_check_plan->bind_param("i", $id_usuario);
+$stmt_check_plan->execute();
+$stmt_check_plan->bind_result($plan_id);
+$stmt_check_plan->fetch();
+$stmt_check_plan->close();
+
+if ($plan_id != 1) {
+    // Si el usuario es premium, manejar las acciones
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_manga'])) {
+        $id_manga = $_POST['id_manga'];
+
+        if (isset($_POST['accion']) && $_POST['accion'] == 'leer') {
+            // Lógica para comenzar a leer
+            $conn->begin_transaction();
+
+            try {
+                // Insertar una nueva visualización
+                $sql_insert = "INSERT INTO Visualizacion (IdUsuario, IdManga) VALUES (?, ?)";
+                $stmt_insert = $conn->prepare($sql_insert);
+                $stmt_insert->bind_param("ii", $id_usuario, $id_manga);
+
+                if (!$stmt_insert->execute()) {
+                    throw new Exception("Error al insertar la visualización en la base de datos: " . $stmt_insert->error);
+                }
+
+                // Actualizar el contador de visualizaciones del manga
+                $sql_update = "UPDATE Manga SET Visualizaciones = Visualizaciones + 1 WHERE IdManga = ?";
+                $stmt_update = $conn->prepare($sql_update);
+                $stmt_update->bind_param("i", $id_manga);
+
+                if (!$stmt_update->execute()) {
+                    throw new Exception("Error al actualizar el contador de visualizaciones del manga: " . $stmt_update->error);
+                }
+
+                // Confirmar la transacción
+                $conn->commit();
+
+                // Redirigir a InfoManga.php con el ID del manga
+                header("Location: InfoManga.php?id_manga=" . $id_manga);
+                exit();
+            } catch (Exception $e) {
+                $conn->rollback();
+                echo $e->getMessage();
+            } finally {
+                $stmt_insert->close();
+                $stmt_update->close();
+            }
+        } elseif (isset($_POST['accion']) && $_POST['accion'] == 'eliminar') {
+            // Lógica para eliminar de favoritos
+            $sql_delete = "DELETE FROM Favorito WHERE IdUsuario = ? AND IdManga = ?";
+            $stmt_delete = $conn->prepare($sql_delete);
+            $stmt_delete->bind_param("ii", $id_usuario, $id_manga);
+
+            if ($stmt_delete->execute()) {
+                // Redirigir de nuevo a la página de favoritos después de eliminar
+                header("Location: favoritos.php");
+                exit();
+            } else {
+                echo "Error al eliminar el manga de tus favoritos.";
+            }
+
+            $stmt_delete->close();
+        }
+    }
+
+    // Obtener los favoritos con JOIN a la tabla Manga
+    $sql_favoritos = "SELECT Manga.Portada, Manga.Titulo, Manga.IdManga 
+                      FROM Favorito 
+                      JOIN Manga ON Favorito.IdManga = Manga.IdManga 
+                      WHERE Favorito.IdUsuario = ?";
+    $stmt_favoritos = $conn->prepare($sql_favoritos);
+    $stmt_favoritos->bind_param("i", $id_usuario);
+    $stmt_favoritos->execute();
+    $resultado_favoritos = $stmt_favoritos->get_result();
+
+    // Crear un array para almacenar los datos de los favoritos
+    $favoritos = array();
+
+    // Recorrer los resultados y guardarlos en el array
+    while ($fila = $resultado_favoritos->fetch_assoc()) {
+        $favoritos[] = $fila;
+    }
+
+    $stmt_favoritos->close();
+} else {
+    // Si el usuario no es premium, redirigirlo a otra página
+    header("Location: biblioteca.php");
+    exit();
+}
+
 ?>
 <style>
     /* Estilos de la tarjeta y elementos adicionales */
@@ -25,7 +115,7 @@ $favoritos = [
 
     .card-img-top {
         border-radius: 15px 15px 0 0;
-        height: 200px; 
+        height: 200px;
         object-fit: cover;
     }
 
@@ -42,6 +132,8 @@ $favoritos = [
 
     .action-buttons {
         margin-top: 10px;
+        display: flex;
+            gap: 10px; /* Espacio entre los botones */
     }
 
     .btn-favorite,
@@ -106,6 +198,8 @@ $favoritos = [
         pointer-events: none;
         z-index: -1;
     }
+
+    
 </style>
 
 <div id="particles-js" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
@@ -113,93 +207,95 @@ $favoritos = [
 <div class="container mt-5">
     <h2 class="text-center mb-4">Tus Mangas Favoritos</h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        <?php foreach ($favoritos as $manga) : ?>
-            <div class="col">
-                <div class="card cyberpunk-card">
-                    <img src="<?php echo $manga['imagen']; ?>" class="card-img-top" alt="Imagen de manga">
-                    <div class="card-body">
-                        <h5 class="card-title"><?php echo $manga['titulo']; ?></h5>
-                        <div class="action-buttons">
-                            <button class="btn btn-outline-light btn-favorite"><i class="fas fa-heart"></i></button>
-                            <button class="btn btn-outline-light btn-share"><i class="fas fa-share-alt"></i></button>
+        <?php if (!empty($favoritos)) : ?>
+            <?php foreach ($favoritos as $favorito) : ?>
+                <div class="col">
+                    <div class="card cyberpunk-card">
+                        <img src="<?php echo $favorito['Portada']; ?>" class="card-img-top" alt="Imagen de manga">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo $favorito['Titulo']; ?></h5>
+                            <div class="action-buttons">
+                                <form method="POST" action="">
+                                    <input type="hidden" class="id-manga" name="id_manga" value="<?php echo $favorito['IdManga']; ?>">
+                                    <input type="hidden" name="accion" value="leer">
+                                    <button class="btn btn-outline-light btn-favorite">Comenzar a leer</button>
+                                </form>
+                                <form method="POST" action="">
+                                    <input type="hidden" class="id-manga" name="id_manga" value="<?php echo $favorito['IdManga']; ?>">
+                                    <input type="hidden" name="accion" value="eliminar">
+                                    <button class="btn btn-outline-light btn-share"><i class="fa-solid fa-trash"></i></button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <h5>No tienes ningún manga en tus favoritos.</h5>
+        <?php endif; ?>
     </div>
-    <!-- Sección de usuario con foto de perfil  -->
-    <div class="user-section mt-5">
-        <div class="user-profile">
-            <img src="https://i.pinimg.com/736x/57/b9/71/57b9714ccc972fa4efbe7b47c404f6c2.jpg" alt="Foto de perfil" class="profile-picture">
-            <div class="user-info">
-                <h4 class="user-name">Usuario</h4>
-                <p class="user-details">Correo electrónico: usuario@example.com</p>
-            </div>
-        </div>
-      
-    </div>
+    
 </div>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script>
     //  partículas
     particlesJS("particles-js", {
-    "particles": {
-        "number": {
-            "value": 100,
-            "density": {
-                "enable": true,
-                "value_area": 800
-            }
-        },
-        "color": {
-            "value": "#ff00ff" 
-        },
-        "shape": {
-            "type": "circle"
-        },
-        "opacity": {
-            "value": 0.5,
-            "random": true
-        },
-        "size": {
-            "value": 3,
-            "random": true
-        },
-        "line_linked": {
-            "enable": true,
-            "distance": 150,
-            "color": "#ff00ff", 
-            "opacity": 0.4,
-            "width": 1
-        },
-        "move": {
-            "enable": true,
-            "speed": 3, 
-            "direction": "none",
-            "random": true,
-            "straight": false,
-            "out_mode": "bounce", 
-            "bounce": true 
-        }
-    },
-    "interactivity": {
-        "events": {
-            "onhover": {
-                "enable": true,
-                "mode": "bubble" 
+        "particles": {
+            "number": {
+                "value": 100,
+                "density": {
+                    "enable": true,
+                    "value_area": 800
+                }
             },
-            "onclick": {
+            "color": {
+                "value": "#ff00ff"
+            },
+            "shape": {
+                "type": "circle"
+            },
+            "opacity": {
+                "value": 0.5,
+                "random": true
+            },
+            "size": {
+                "value": 3,
+                "random": true
+            },
+            "line_linked": {
                 "enable": true,
-                "mode": "repulse"
+                "distance": 150,
+                "color": "#ff00ff",
+                "opacity": 0.4,
+                "width": 1
+            },
+            "move": {
+                "enable": true,
+                "speed": 3,
+                "direction": "none",
+                "random": true,
+                "straight": false,
+                "out_mode": "bounce",
+                "bounce": true
+            }
+        },
+        "interactivity": {
+            "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "bubble"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "repulse"
+                }
             }
         }
-    }
-});
-    </script>
+    });
+</script>
 
 
-    
-    <?php
+
+<?php
 include '../Plantillas/Footer.php';
 ?>

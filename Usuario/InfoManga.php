@@ -235,7 +235,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="card-body d-flex flex-column justify-content-between text-start">
                         <h5 class="card-title"><?php echo $manga['Titulo']; ?></h5>
                         <form action="" method="post">
-                        <button type="submit" class="btn btn-lg btn-outline-primary">Añadir a Favoritos</button>
+                        <button type="submit" class="btn btn-lg btn-outline-primary"><i class="fa-solid fa-plus"></i>Añadir a Favoritos</button>
                         </form>
                         <p class="card-text"><?php echo $manga['Descripcion']; ?></p>
                         <div>
