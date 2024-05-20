@@ -122,6 +122,9 @@ if ($resultado->num_rows > 0) {
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 246, 255, 0.6);
             margin-top: 20px;
+
+            position: relative;
+        left: 40px;
         }
         .open-modal-button:hover {
             background: linear-gradient(145deg, #ff00e6, #00f6ff);
@@ -218,14 +221,24 @@ if ($resultado->num_rows > 0) {
             <button class="reset-filters">Restablecer filtros y orden</button>
         </div>
     </div>
+<br>
+<br>
 
+
+<style>
+    #manga-container{
+
+        position: relative;
+        left: 40px;
+    }
+</style>
     <!-- Tarjetas de mangas -->
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-5" id="manga-container">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center" id="manga-container">
         <?php foreach ($datosmangas as $manga) : ?>
             <!-- <a href="./InfoManga.php" class="text-decoration-none" onclick="document.getElementById('miFormulario').submit(); return false;">-->
 
             <!-- Aquí puedes agregar tus tarjetas de mangas -->
-            <div class="col manga-card" data-etiquetas="<?php echo implode(' ', $manga['etiquetas']); ?>">
+            <div class="col manga-card justify-content-center" data-etiquetas="<?php echo implode(' ', $manga['etiquetas']); ?>">
                 <div class="card shadow-sm position-relative">
                     <div class="title-container">
                         <h5 class="card-header" id="TituloManga"><?php echo $manga['titulo']; ?></h5>
