@@ -139,6 +139,9 @@ if (isset($_GET['cerrar_sesion'])) {
                         <a class="nav-link" href="<?php echo $url . '/Usuario/MetodoPago.php'; ?>">Metodo de pago</a>
                     </li>
                     <li class="list-group-item">
+                        <a class="nav-link" href="<?php echo $url . '/Usuario/InfoSuscripcion.php'; ?>">Suscripciones</a>
+                    </li>
+                    <li class="list-group-item">
                         <a class="nav-link" href="?cerrar_sesion">Cerrar Sesión</a>
                     </li>
                 </ul>
