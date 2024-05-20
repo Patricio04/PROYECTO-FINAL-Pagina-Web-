@@ -578,3 +578,15 @@ margin-top: 400px;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+.header {
+    text-align: center;
+  
+    background-color: #1f1a3b;
+    border-bottom: 2px solid #c3073f;
+}
+
+.header h1 {
+    font-size: 3rem;
+    color: #c3073f;
+    margin: 0;
+}

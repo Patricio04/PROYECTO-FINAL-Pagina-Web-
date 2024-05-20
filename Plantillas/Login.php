@@ -72,8 +72,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 
-
-
+ <BR></BR>
+<br>
     <!-- Aquí comienza la estructura del Formulario de Login -->
     <div class="containerr" id="containerr">
         <div class="form-container sign-up">
@@ -85,14 +85,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
-                <span>or use your email for registeration</span>
                 <input type="text" placeholder="Nombre(s)" name="TxtNombre">
                 <input type="text" placeholder="Apellido(s)" name="TxtApellido">
                 <input type="email" placeholder="Correo" name="TxtCorreo">
                 <input type="password" placeholder="Contraseña" name="TxtContraseña">
 
                 <input type="hidden" name="formulario" value="signup"> <!-- Este no se muestra, pero sirve para hacer la comprobacion de que formulario es el que se está enviando-->
-                <a href="#">Forget Your Password?</a>
+            
                 <button>Sign In</button>
             </form>
         </div>
@@ -105,7 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
-                <span>or use your email password</span>
                 <label>Correo electronico</label>
                 <input type="email" class="form-control" id="floatingEmail" name="txtcorreo" placeholder="nombre@ejemplo.com">
             <label>Contraseña</label>
@@ -120,12 +118,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
                     <h1>Welcome Back!</h1>
-                    <p>Enter your personal details to use all of site features</p>
+                    <p>Ya tienes cuenta?inicia seccion para disfrutar la lectura de distintos mangas💜</p>
                     <button class="hidden" id="login">Sign In</button>
                 </div>
                 <div class="toggle-panel toggle-right">
                     <h1>Hello, Friend!</h1>
-                    <p>Register with your personal details to use all of site features</p>
+                    <p>Aun no tienes cuenta?Que esperas registrese en este preciso instante!!</p>
                     <button class="hidden" id="register">Sign Up</button>
                 </div>
             </div>
