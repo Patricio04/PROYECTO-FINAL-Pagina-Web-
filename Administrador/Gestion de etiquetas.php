@@ -71,8 +71,7 @@ if ($resultado->num_rows > 0) {
                             </a>
                             <ul class="dropdown-menu show">
                                 <li><a class="dropdown-item" href="./Gestion-de-mangas.php"><i class="fa-solid fa-book m-2"></i>Gestion de mangas</a></li>
-                                <li><a class="dropdown-item" href="./Gestion de carrsuel.php"><i class="fa-solid fa-book m-2"></i>Gestion de carrusel</a></li>
-                                <hr class="dropdown-divider">
+                                <li><a class="dropdown-item" href="./Gestion de suscripciones.php"><i class="fa-solid fa-book m-2"></i>Gestion de suscripciones</a></li>                                <hr class="dropdown-divider">
                                 <li><a class="dropdown-item" href="#"><i class="fa-solid fa-book m-2"></i><strong>Gestion de etiquetas</strong> <i class="fa-solid fa-caret-left m-2"></i></a></li>
                             </ul>
                         </li>
@@ -84,7 +83,6 @@ if ($resultado->num_rows > 0) {
                                 <i class="fa-regular fa-file m-2"></i>Reportes</a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="./Reportes financieros.php"><i class="fa-regular fa-file m-2"></i>Financiero</a></li>
-                                <li><a class="dropdown-item" href="./Reportes de visualizacion.php"><i class="fa-regular fa-file m-2"></i>Datos de visualizacion</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
