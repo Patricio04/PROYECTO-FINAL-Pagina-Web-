@@ -60,6 +60,18 @@ if ($id_manga > 0) {
 
 // Verificar cuál formulario fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type'])) {
+
+    if ($_POST['form_type'] == "go_to_capitulo") {
+        if (isset($_POST['id_capitulo'])) {
+            $id_capitulo = $_POST['id_capitulo'];
+            // Redirigir a la página capitulos.php con el IdCapitulo
+            header("Location: capitulos.php?id_manga=" . $id_manga . "&id_capitulo=" . $id_capitulo);
+            exit();
+        } else {
+            // Manejar el caso en que no se proporciona el IdCapitulo
+        }
+    }
+
     if ($_POST['form_type'] == "add_to_favorites") {
         // Lógica para añadir a favoritos
 
@@ -113,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type'])) {
         if (isset($_POST['accion']) && $_POST['accion'] == 'Nombre del Usuario') {
             // Obtener los datos del formulario
             $contenido_comentario = $_POST['content'];
-        
+
             // Comprobar el plan del usuario
             $sql_check_plan = "SELECT IdPlan FROM Usuario WHERE IdUsuario = ?";
             $stmt_check_plan = $conn->prepare($sql_check_plan);
@@ -122,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type'])) {
             $stmt_check_plan->bind_result($plan_id);
             $stmt_check_plan->fetch();
             $stmt_check_plan->close();
-        
+
             // Verificar si el usuario tiene un plan premium
             if ($plan_id != 1) {
                 // Si el usuario es premium, realizar la inserción del comentario
@@ -130,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type'])) {
                     // Preparar la consulta SQL
                     $stmt = $conn->prepare("INSERT INTO comentario (IdUsuario, IdManga, ContenidoComentario, FechaComentario) VALUES (?, ?, ?, NOW())");
                     $stmt->bind_param("iis", $id_usuario, $id_manga, $contenido_comentario);
-        
+
                     // Ejecutar la consulta
                     if ($stmt->execute()) {
                         echo "<div class='alert alert-dismissible alert-secondary' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
@@ -139,7 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type'])) {
                     } else {
                         echo "Error: " . $stmt->error;
                     }
-        
+
                     // Cerrar la declaración
                     $stmt->close();
                 } else {
@@ -324,10 +336,15 @@ if ($result->num_rows > 0) {
             <h3 class="mb-3 text-white">Capítulos</h3>
             <ul class="list-group">
                 <?php foreach ($manga['capitulos'] as $capitulo) : ?>
-                    <li class="list-group-item d-flex justify-content-between align-items-center mb-2">
-                        <?php echo $capitulo['NombreCapitulo']; ?>
+                    <form action="" method="POST">
+                        <input type="hidden" name="form_type" value="go_to_capitulo">
+                        <input type="hidden" name="id_capitulo" value="<?php echo $capitulo['IdCapitulo']; ?>">
+                        <li class="list-group-item d-flex justify-content-between align-items-center mb-2">
+                            <?php echo $capitulo['NombreCapitulo']; ?>
 
-                        <a href="#" class="btn btn-sm btn-outline-secondary">Leer</a>
+
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Leer</button>
+                    </form>
                     </li>
                 <?php endforeach; ?>
 
@@ -513,7 +530,7 @@ if ($result->num_rows > 0) {
 
         <div class="comments-section-container">
             <div class="comments-section" id="commentsSection" style="display:none;">
-                
+
                 <h2>Comentarios</h2>
 
                 <!-- Formulario para agregar nuevos comentarios -->
@@ -529,7 +546,7 @@ if ($result->num_rows > 0) {
                 <div id="commentsContainer">
                     <?php if (!empty($comments)) : ?>
                         <?php foreach ($comments as $comment) : ?>
-                            
+
 
                             <div class="comment">
                                 <div class="comment-author"><?php echo $comment['Nombre']; ?></div>
