@@ -2,7 +2,8 @@
 include '../Assets/Bases de datos/db.php';
 include '../Plantillas/Header.php';
 
-
+date_default_timezone_set('America/Mexico_City');
+setlocale(LC_ALL, 'es_ES.UTF-8');
 // Verificar si hay un ID de manga en la URL
 $id_manga = isset($_GET['id_manga']) ? intval($_GET['id_manga']) : 0;
 
@@ -50,65 +51,130 @@ if ($id_manga > 0) {
         exit(); // Salir del script
     }
 
-    
+
     $stmt_capitulos->close();
 } else {
     echo "ID del manga no válido.";
     exit(); // Salir del script
 }
 
+// Verificar cuál formulario fue enviado
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type'])) {
+    if ($_POST['form_type'] == "add_to_favorites") {
+        // Lógica para añadir a favoritos
 
-    //Logica para añadir a favoritos
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if ($id_manga > 0 && !empty($id_usuario)) {
+            // Comprobar si el usuario tiene un plan con un ID diferente de 1
+            $sql_check = "SELECT IdPlan FROM Usuario WHERE IdUsuario = ?";
+            if ($stmt_check = $conn->prepare($sql_check)) {
+                $stmt_check->bind_param("i", $id_usuario);
+                $stmt_check->execute();
+                $stmt_check->bind_result($plan_id);
+                $stmt_check->fetch();
+                $stmt_check->close();
 
+                if ($plan_id != 1) {
+                    // Preparar la consulta SQL para insertar en favorito
+                    $sql = "INSERT INTO favorito (IdManga, IdUsuario) VALUES (?, ?)";
 
-    if ($id_manga > 0 && !empty($id_usuario)) {
-        // Comprobar si el usuario tiene un plan con un ID diferente de 1
-        $sql_check = "SELECT IdPlan FROM Usuario WHERE IdUsuario = ?";
-        if ($stmt_check = $conn->prepare($sql_check)) {
-            $stmt_check->bind_param("i", $id_usuario);
-            $stmt_check->execute();
-            $stmt_check->bind_result($plan_id);
-            $stmt_check->fetch();
-            $stmt_check->close();
+                    if ($stmt = $conn->prepare($sql)) {
+                        $stmt->bind_param("ii", $id_manga, $id_usuario);
 
-            if ($plan_id != 1) {
-                // Preparar la consulta SQL para insertar en favorito
-                $sql = "INSERT INTO favorito (IdManga, IdUsuario) VALUES (?, ?)";
+                        if ($stmt->execute()) {
+                            echo "
+                            <div class='alert alert-dismissible alert-info' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
+                            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                            <strong>Ahora puedes encontrar este manga en tu seccion de favoritos!</strong></div>
+                            ";
+                        } else {
+                            echo "<div class='alert alert-dismissible alert-secondary' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
+                            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                            <strong>Este manga ya se encuentra en tu seccion de favoritos!</strong></div>";
+                        }
 
-                if ($stmt = $conn->prepare($sql)) {
-                    $stmt->bind_param("ii", $id_manga, $id_usuario);
-
-                    if ($stmt->execute()) {
-                        echo "
-                        <div class='alert alert-dismissible alert-info' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
-                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-                        <strong>Ahora puedes encontrar este manga en tu seccion de favoritos!</strong></div>
-                        ";
+                        $stmt->close();
                     } else {
-                        echo "<div class='alert alert-dismissible alert-secondary' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
-                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-                        <strong>Este manga ya se encuentra en tu seccion de favoritos!</strong></div>";
+                        echo "Error en la preparación de la consulta: " . $conn->error;
                     }
-
-                    $stmt->close();
                 } else {
-                    echo "Error en la preparación de la consulta: " . $conn->error;
+                    echo "<div class='alert alert-dismissible alert-warning' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
+                    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                    <strong>Necesitas ser premium para utilizar esta funcion!</strong></div>";
                 }
             } else {
-                echo "<div class='alert alert-dismissible alert-warning' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
-                <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-                <strong>Necesitas ser premium para utilizar esta funcion!</strong></div>";
+                echo "Error en la preparación de la consulta de verificación: " . $conn->error;
             }
         } else {
-            echo "Error en la preparación de la consulta de verificación: " . $conn->error;
+            echo "ID de manga o usuario no válido.";
         }
-    } else {
-        echo "ID de manga o usuario no válido.";
+    } elseif ($_POST['form_type'] == "add_comment") {
+        // Lógica para añadir comentarios
+
+        if (isset($_POST['accion']) && $_POST['accion'] == 'Nombre del Usuario') {
+            // Obtener los datos del formulario
+            $contenido_comentario = $_POST['content'];
+        
+            // Comprobar el plan del usuario
+            $sql_check_plan = "SELECT IdPlan FROM Usuario WHERE IdUsuario = ?";
+            $stmt_check_plan = $conn->prepare($sql_check_plan);
+            $stmt_check_plan->bind_param("i", $id_usuario);
+            $stmt_check_plan->execute();
+            $stmt_check_plan->bind_result($plan_id);
+            $stmt_check_plan->fetch();
+            $stmt_check_plan->close();
+        
+            // Verificar si el usuario tiene un plan premium
+            if ($plan_id != 1) {
+                // Si el usuario es premium, realizar la inserción del comentario
+                if (!empty($id_usuario) && !empty($id_manga) && !empty($contenido_comentario)) {
+                    // Preparar la consulta SQL
+                    $stmt = $conn->prepare("INSERT INTO comentario (IdUsuario, IdManga, ContenidoComentario, FechaComentario) VALUES (?, ?, ?, NOW())");
+                    $stmt->bind_param("iis", $id_usuario, $id_manga, $contenido_comentario);
+        
+                    // Ejecutar la consulta
+                    if ($stmt->execute()) {
+                        echo "<div class='alert alert-dismissible alert-secondary' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
+                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                        <strong>Comentario añadido exitosamente!</strong></div>";
+                    } else {
+                        echo "Error: " . $stmt->error;
+                    }
+        
+                    // Cerrar la declaración
+                    $stmt->close();
+                } else {
+                    echo "Todos los campos son requeridos.";
+                }
+            } else {
+                // Si el usuario no es premium, mostrar un mensaje de que necesita ser premium
+                echo "<div class='alert alert-dismissible alert-warning' style='position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;'>
+                <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                <strong>Necesitas ser premium para comentar!</strong></div>";
+            }
+        }
     }
 }
 
 
+
+$sql = "SELECT comentario.*, usuario.Nombre 
+        FROM comentario 
+        INNER JOIN usuario ON comentario.IdUsuario = usuario.IdUsuario 
+        ORDER BY FechaComentario DESC";
+$result = $conn->query($sql);
+
+
+$comments = [];
+
+if ($result->num_rows > 0) {
+    // Almacenar los resultados en la variable $comments
+    while ($row = $result->fetch_assoc()) {
+        $row['FechaComentario'] = date_create($row['FechaComentario'])->format('F d Y \a\t H:i');
+        $comments[] = $row;
+    }
+} else {
+    echo "";
+}
 
 ?>
 <style>
@@ -140,7 +206,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     .btn-outline-primary:hover {
         color: turquoise;
-        
+
         border-color: turquoise;
     }
 
@@ -211,9 +277,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         border-radius: 5px;
         cursor: pointer;
     }
-   
 
-    
+
+
     .list-group-item {
         transition: filter 0.3s ease;
         /* Añadir una transición suave */
@@ -223,7 +289,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         filter: brightness(1.3);
         /* Aumentar el brillo al pasar el ratón */
     }
-
 </style>
 
 <div class="container mt-5">
@@ -235,7 +300,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="card-body d-flex flex-column justify-content-between text-start">
                         <h5 class="card-title"><?php echo $manga['Titulo']; ?></h5>
                         <form action="" method="post">
-                        <button type="submit" class="btn btn-lg btn-outline-primary"><i class="fa-solid fa-plus"></i>Añadir a Favoritos</button>
+                            <input type="hidden" name="form_type" value="add_to_favorites">
+                            <button type="submit" class="btn btn-lg btn-outline-primary">
+                                <i class="fa-solid fa-plus"></i>Añadir a Favoritos
+                            </button>
                         </form>
                         <p class="card-text"><?php echo $manga['Descripcion']; ?></p>
                         <div>
@@ -274,56 +342,68 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin: 0;
             padding: 0;
         }
+
         .comments-section-container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
+
         .comments-section {
             width: 100%;
             max-width: 600px;
             background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-top: 20px;
         }
+
         .comments-section h2 {
             color: #6f42c1;
             text-align: center;
             margin-bottom: 20px;
         }
+
         .comment {
             margin-bottom: 15px;
             padding: 10px;
             border-bottom: 1px solid #ddd;
         }
+
         .comment-author {
             font-weight: bold;
         }
+
         .comment-content {
             margin-top: 5px;
         }
+
         .comment-date {
             font-size: 0.9em;
             color: #777;
         }
+
         #commentForm {
             margin-bottom: 20px;
         }
+
         #commentForm label {
             display: block;
             margin-top: 10px;
         }
-        #commentForm input, #commentForm textarea {
+
+        #commentForm input,
+        #commentForm textarea {
             width: 100%;
             padding: 8px;
             margin-top: 5px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+
         #commentForm button {
             margin-top: 10px;
             padding: 10px 15px;
@@ -333,9 +413,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: 4px;
             cursor: pointer;
         }
+
         #commentForm button:hover {
             background-color: #5a379c;
         }
+
         .user-info {
             display: flex;
             align-items: center;
@@ -343,8 +425,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 10px;
             background-color: #f9f9f9;
             border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
+
         .user-info img {
             border-radius: 50%;
             width: 40px;
@@ -352,10 +435,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-right: 10px;
             cursor: pointer;
         }
+
         .user-info span {
             font-weight: bold;
             font-size: 1.2em;
         }
+
         .show-comments-btn {
             display: block;
             margin: 20px auto;
@@ -366,186 +451,175 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: 4px;
             cursor: pointer;
         }
+
         .show-comments-btn:hover {
             background-color: #5a379c;
         }
+
         .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
+            display: none;
+            position: fixed;
+            z-index: 1;
             left: 0;
             top: 0;
             width: 350px;
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgb(0,0,0); 
-            background-color: rgba(0,0,0,0.4); 
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
         }
+
         .modal-content {
             background-color: #fefefe;
-            margin: 15% auto; 
+            margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%; 
+            width: 80%;
             max-width: 400px;
             border-radius: 8px;
         }
+
         .close {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
+
         .close:hover,
         .close:focus {
             color: black;
             text-decoration: none;
             cursor: pointer;
         }
+
         .avatar-option {
             display: inline-block;
             margin: 10px;
             cursor: pointer;
         }
+
         .avatar-option img {
             border-radius: 50%;
             width: 60px;
             height: 60px;
         }
     </style>
-</head>
-<body>
+    </head>
 
-<button class="show-comments-btn" onclick="toggleComments()">Mostrar comentarios</button>
+    <body>
 
-<div class="comments-section-container">
-    <div class="comments-section" id="commentsSection" style="display:none;">
-        <div class="user-info">
-            <img src="avatar1.png" alt="Avatar" id="userAvatar" onclick="openModal()">
-            <span id="userName">Nombre del Usuario</span>
-        </div>
-        <h2>Comentarios</h2>
-        
-        <!-- Formulario para agregar nuevos comentarios -->
-        <h3 style="color: #6f42c1;">Añadir un comentario</h3>
-        <form id="commentForm" onsubmit="addComment(event)">
-            <!-- El campo de nombre se oculta ya que viene de la base de datos -->
-            <input type="hidden" id="author" name="author" value="Nombre del Usuario">
-            <label for="content">Comentario:</label>
-            <textarea id="content" name="content" required></textarea>
-            <button type="submit">Enviar</button>
-        </form>
+        <button class="show-comments-btn" onclick="toggleComments()">Mostrar comentarios</button>
 
-        <div id="commentsContainer">
-            <div class="comment">
-                <div class="comment-author">Usuario 1</div>
-                <div class="comment-content">¡Me encantó este capítulo!</div>
-                <div class="comment-date">Publicado el 10 de mayo de 2024</div>
+        <div class="comments-section-container">
+            <div class="comments-section" id="commentsSection" style="display:none;">
+                
+                <h2>Comentarios</h2>
+
+                <!-- Formulario para agregar nuevos comentarios -->
+                <h3 style="color: #6f42c1;">Añadir un comentario</h3>
+                <form id="commentForm" method="post">
+                    <input type="hidden" name="form_type" value="add_comment">
+                    <input type="hidden" id="author" name="accion" value="Nombre del Usuario">
+                    <label for="content">Comentario:</label>
+                    <textarea id="content" name="content" required></textarea>
+                    <button type="submit">Enviar<i class="fa-regular fa-paper-plane m-2"></i></button>
+                </form>
+
+                <div id="commentsContainer">
+                    <?php if (!empty($comments)) : ?>
+                        <?php foreach ($comments as $comment) : ?>
+                            
+
+                            <div class="comment">
+                                <div class="comment-author"><?php echo $comment['Nombre']; ?></div>
+                                <div class="comment-content"><?php echo htmlspecialchars($comment['ContenidoComentario']); ?></div>
+                                <div class="comment-date"><?php echo $comment['FechaComentario']; ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <h5>No hay comentarios disponibles.</h5>
+                    <?php endif; ?>
+
+                </div>
             </div>
-            <div class="comment">
-                <div class="comment-author">Usuario 2</div>
-                <div class="comment-content">Prueba comentarios xdd xd xd</div>
-                <div class="comment-date">Publicado el 11 de mayo de 2024</div>
-            </div>
         </div>
-    </div>
-</div>
-
-<!-- Modal para seleccionar avatar -->
-<div id="avatarModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Selecciona tu avatar</h2>
-        <div class="avatar-option" onclick="selectAvatar('avatar4.jpg')">
-            <img src="avatar1.png" alt="Avatar 1">
-        </div>
-        <div class="avatar-option" onclick="selectAvatar('avatar1.jpeg')">
-            <img src="avatar2.png" alt="Avatar 2">
-        </div>
-        <div class="avatar-option" onclick="selectAvatar('avatar3.png')">
-            <img src="avatar3.png" alt="Avatar 3">
-        </div>
-        <div class="avatar-option" onclick="selectAvatar('avatar4.png')">
-            <img src="avatar4.png" alt="Avatar 4">
-        </div>
-    </div>
-</div>
-
-<script>
-
-
-// Para base de datos funcionalidad 
-const loggedInUser = "Nombre del Usuario"; // Este valor vendría de la base de datos
-document.getElementById('author').value = loggedInUser;
-document.getElementById('userName').textContent = loggedInUser;
-
-function toggleComments() {
-    const commentsSection = document.getElementById('commentsSection');
-    const btn = document.querySelector('.show-comments-btn');
-    if (commentsSection.style.display === 'none') {
-        commentsSection.style.display = 'block';
-        btn.textContent = 'Ocultar comentarios';
-    } else {
-        commentsSection.style.display = 'none';
-        btn.textContent = 'Mostrar comentarios';
-    }
-}
-
-function addComment(event) {
-    event.preventDefault();
-
-    const author = loggedInUser;
-    const content = document.getElementById('content').value;
-    const date = new Date().toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-
-    const commentSection = document.getElementById('commentsContainer');
-
-    const newComment = document.createElement('div');
-    newComment.classList.add('comment');
-
-    const newCommentAuthor = document.createElement('div');
-    newCommentAuthor.classList.add('comment-author');
-    newCommentAuthor.textContent = author;
-
-    const newCommentContent = document.createElement('div');
-    newCommentContent.classList.add('comment-content');
-    newCommentContent.textContent = content;
-
-    const newCommentDate = document.createElement('div');
-    newCommentDate.classList.add('comment-date');
-    newCommentDate.textContent = `Publicado el ${date}`;
-
-    newComment.appendChild(newCommentAuthor);
-    newComment.appendChild(newCommentContent);
-    newComment.appendChild(newCommentDate);
-
-    commentSection.appendChild(newComment);
-
-    // Clear the form
-    document.getElementById('commentForm').reset();
-}
-
-function openModal() {
-    document.getElementById('avatarModal').style.display = 'block';
-}
-
-function closeModal() {
-    document.getElementById('avatarModal').style.display = 'none';
-}
-
-function selectAvatar(avatarSrc) {
-    document.getElementById('userAvatar').src = avatarSrc;
-    closeModal();
-}
-</script>
-<?php
-// Incluye el footer
-include '../Plantillas/Footer.php';
 
 
 
-?>
+        <script>
+            // Para base de datos funcionalidad 
+            const loggedInUser = "Nombre del Usuario"; // Este valor vendría de la base de datos
+            document.getElementById('author').value = loggedInUser;
+            document.getElementById('userName').textContent = loggedInUser;
+
+            function toggleComments() {
+                const commentsSection = document.getElementById('commentsSection');
+                const btn = document.querySelector('.show-comments-btn');
+                if (commentsSection.style.display === 'none') {
+                    commentsSection.style.display = 'block';
+                    btn.textContent = 'Ocultar comentarios';
+                } else {
+                    commentsSection.style.display = 'none';
+                    btn.textContent = 'Mostrar comentarios';
+                }
+            }
+
+            function addComment(event) {
+                event.preventDefault();
+
+                const author = loggedInUser;
+                const content = document.getElementById('content').value;
+                const date = new Date().toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                const commentSection = document.getElementById('commentsContainer');
+
+                const newComment = document.createElement('div');
+                newComment.classList.add('comment');
+
+                const newCommentAuthor = document.createElement('div');
+                newCommentAuthor.classList.add('comment-author');
+                newCommentAuthor.textContent = author;
+
+                const newCommentContent = document.createElement('div');
+                newCommentContent.classList.add('comment-content');
+                newCommentContent.textContent = content;
+
+                const newCommentDate = document.createElement('div');
+                newCommentDate.classList.add('comment-date');
+                newCommentDate.textContent = `Publicado el ${date}`;
+
+                newComment.appendChild(newCommentAuthor);
+                newComment.appendChild(newCommentContent);
+                newComment.appendChild(newCommentDate);
+
+                commentSection.appendChild(newComment);
+
+                // Clear the form
+                document.getElementById('commentForm').reset();
+            }
+
+            function openModal() {
+                document.getElementById('avatarModal').style.display = 'block';
+            }
+
+            function closeModal() {
+                document.getElementById('avatarModal').style.display = 'none';
+            }
+
+            function selectAvatar(avatarSrc) {
+                document.getElementById('userAvatar').src = avatarSrc;
+                closeModal();
+            }
+        </script>
+        <?php
+        // Incluye el footer
+        include '../Plantillas/Footer.php';
+
+
+
+        ?>

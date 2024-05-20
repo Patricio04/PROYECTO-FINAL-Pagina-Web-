@@ -133,7 +133,8 @@ if ($plan_id != 1) {
     .action-buttons {
         margin-top: 10px;
         display: flex;
-            gap: 10px; /* Espacio entre los botones */
+        gap: 10px;
+        /* Espacio entre los botones */
     }
 
     .btn-favorite,
@@ -198,8 +199,6 @@ if ($plan_id != 1) {
         pointer-events: none;
         z-index: -1;
     }
-
-    
 </style>
 
 <div id="particles-js" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
@@ -231,10 +230,14 @@ if ($plan_id != 1) {
                 </div>
             <?php endforeach; ?>
         <?php else : ?>
-            <h5>No tienes ningún manga en tus favoritos.</h5>
+            
+                
+            
+                
+            
         <?php endif; ?>
     </div>
-    
+
 </div>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script>
