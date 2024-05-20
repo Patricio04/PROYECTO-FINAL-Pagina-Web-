@@ -169,24 +169,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type'])) {
 
 
 
+// Consulta SQL para obtener los comentarios del manga específico ordenados por fecha de manera descendente
 $sql = "SELECT comentario.*, usuario.Nombre 
         FROM comentario 
         INNER JOIN usuario ON comentario.IdUsuario = usuario.IdUsuario 
+        WHERE comentario.IdManga = ? 
         ORDER BY FechaComentario DESC";
-$result = $conn->query($sql);
 
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    die('Error en la consulta SQL: ' . htmlspecialchars($conn->error));
+}
+$stmt->bind_param("i", $id_manga);
+$stmt->execute();
+$result = $stmt->get_result();
 
 $comments = [];
 
 if ($result->num_rows > 0) {
     // Almacenar los resultados en la variable $comments
     while ($row = $result->fetch_assoc()) {
-        $row['FechaComentario'] = date_create($row['FechaComentario'])->format('F d Y \a\t H:i');
+        $row['FechaComentario'] = date_create($row['FechaComentario'])->format('j \d\e F \d\e\l Y \a \l\a\s H:i');
         $comments[] = $row;
     }
 } else {
     echo "";
 }
+
+// Cerrar la conexión
+$stmt->close();
 
 ?>
 <style>
