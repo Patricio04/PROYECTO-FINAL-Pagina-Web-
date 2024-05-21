@@ -82,20 +82,11 @@ if (isset($_GET['cerrar_sesion'])) {
                         <li class="nav-item tm">
                             <a id="favoritos-link" class="nav-link link-red link-light" href="<?php echo $url . '/Usuario/favoritos.php'; ?>">Favoritos</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Categorías
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
                         </li>
-
+                        <li class="nav-item tm">
+                            <a id="favoritos-link" class="nav-link link-red link-light" href="<?php echo $url . '/Plantillas/acerca.php'; ?>">Nosotros</a>
+                        </li>
+                        
                     </ul>
                     <form class="d-flex">
                         <div class="input-group">

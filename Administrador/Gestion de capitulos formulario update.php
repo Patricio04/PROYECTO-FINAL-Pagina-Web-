@@ -1,7 +1,3 @@
-<!--Para acceder a este apartado el usuario que inicie sesion tiene que tener un ID_rol = 3 que es el indicado para administradores-->
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,75 +13,64 @@
 </head>
 
 <?php
-// archivo de conexion a la BD
 require '../Assets/Bases de datos/db.php';
 
-// Consulta SQL para seleccionar todas las etiquetas
-$sql = "SELECT IdEtiqueta, NombreEtiqueta FROM Etiqueta";
+// Obtener los mangas
+$sql = "SELECT IdManga, Titulo FROM manga";
 $resultado = $conn->query($sql);
 
-// Comprueba si hay resultados y guarda los nombres y IDs de las etiquetas en un array asociativo
-$etiquetas = array();
+$Mangas = array();
 if ($resultado->num_rows > 0) {
     while ($fila = $resultado->fetch_assoc()) {
-        $etiquetas[] = array(
-            "id" => $fila["IdEtiqueta"],
-            "nombre" => $fila["NombreEtiqueta"]
+        $Mangas[] = array(
+            "IdManga" => $fila["IdManga"],
+            "Titulo" => $fila["Titulo"]
         );
     }
 } else {
-    echo "No se encontraron etiquetas.";
+    echo "No se encontraron mangas.";
 }
 
+// Verificar si hay un ID de capítulo en la URL
+$idCapitulo = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$capitulo = null;
 
-
+// Si hay un ID de capítulo, cargar los datos del capítulo
+if ($idCapitulo > 0) {
+    $sql = "SELECT * FROM Capitulo WHERE IdCapitulo = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $idCapitulo);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $capitulo = $result->fetch_assoc();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Datos del formulario
-    $titulo = $_POST['txtitulo'];
-    $portada = $_POST['txtportada'];
-    $descripcion = $_POST['txtareadescripcion'];
-    $etiquetas = $_POST['etiquetas']; // Array de etiquetas seleccionadas
+    $idCapitulo = intval($_POST['idCapitulo']);
+    $idManga = intval($_POST['idManga']);
+    $numeroCapitulo = intval($_POST['numeroCapitulo']);
+    $tituloCapitulo = $_POST['tituloCapitulo'];
 
-    // Inicia la transacción
-    $conn->begin_transaction();
+    $sql = "UPDATE Capitulo SET IdManga = ?, NombreCapitulo = ?, Orden = ? WHERE IdCapitulo = ?";
+    $stmt = $conn->prepare($sql);
 
-    // Inserta el manga
-    $sql = "INSERT INTO Manga (Titulo, Portada, Descripcion) VALUES ('$titulo', '$portada', '$descripcion')";
-    $result = $conn->query($sql);
+    // Vincular parámetros y ejecutar la consulta
+    $stmt->bind_param("isii", $idManga, $tituloCapitulo, $numeroCapitulo, $idCapitulo);
 
-    if ($result === TRUE) {
-        // Obtiene el ID del manga insertado
-        $idManga = $conn->insert_id;
-        // echo "ID del manga insertado: " . $idManga;
-        // Inserta las etiquetas del manga
-        foreach ($etiquetas as $idEtiqueta) {
-            $sql = "INSERT INTO EtiquetaManga (IdManga, IdEtiqueta) VALUES ('$idManga', '$idEtiqueta')";
-            $result = $conn->query($sql);
-            if ($result === FALSE) {
-                // Si la inserción de etiquetas falla, puedes deshacer la transacción
-                $conn->rollback();
-                echo "Error al insertar etiquetas: " . $conn->error;
-                exit;
-            }
-        }
-
-        // Confirma la transacción
-        $conn->commit();
-        header("Location: Gestion-de-mangas.php"); // Redirige de vuelta a la gestión de mangas
+    if ($stmt->execute()) {
+        // Redirigir después de la actualización
+        header("Location: Gestion de capitulos.php");
         exit();
     } else {
-        // Si la inserción de manga falla, puedes deshacer la transacción
-        $conn->rollback();
-        echo "Error al insertar manga: " . $conn->error;
+        echo "Error al actualizar el capítulo: " . $stmt->error;
     }
 
-    // Cierra la conexión
-   
+    
 }
 
 
-
+$stmt->close();
 
 ?>
 
@@ -93,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
 
-<nav class="navbar bg-dark">
+    <nav class="navbar bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand  link-light" href="./Gestion-de-mangas.php">
                 <img src="../Img/noto-v1_tornado.png" alt="Tatsu logo">Tatsu </img>
@@ -117,7 +102,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <li><a class="dropdown-item" href="./Gestion-de-mangas.php"><i class="fa-solid fa-book m-2"></i><strong>Gestion de mangas</strong> <i class="fa-solid fa-caret-left m-2"></i></a></li>
                                 <li><a class="dropdown-item" href="./Gestion de suscripciones.php"><i class="fa-solid fa-book m-2"></i>Gestion de suscripciones</a></li>                                <hr class="dropdown-divider">
                                 <li><a class="dropdown-item" href="./Gestion de etiquetas.php"><i class="fa-solid fa-book m-2"></i>Gestion de etiquetas</a></li>
-                                <li><a class="dropdown-item" href="./Gestion de capitulos.php"><i class="fa-solid fa-book m-2"></i>Gestion de capitulos</a></li>
+                                <li><a class="dropdown-item" href="./Gestion de capitulos.php"><i class="fa-solid fa-book m-2"></i><strong>Gestión de capítulos</strong> <i class="fa-solid fa-caret-left m-2"></i></a></li>
+
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -128,6 +114,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <i class="fa-regular fa-file m-2"></i>Reportes</a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="./Reportes financieros.php"><i class="fa-regular fa-file m-2"></i>Financiero</a></li>
+                                <li><a class="dropdown-item" href="./Gestion de capitulos.php"><i class="fa-solid fa-book m-2"></i><strong>Gestión de capítulos</strong> <i class="fa-solid fa-caret-left m-2"></i></a></li>
+
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -142,62 +130,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </nav>
 
-                            <!-- Formulario para agregar mangas -->
+    <!-- Formulario para agregar usuarios -->
 
 
     <form class="row needs-validation p-5 h-100 m-5 text-white bg-dark border rounded-3" method="POST">
-    <input type="hidden" name="idManga" value="">
+    <input type="hidden" name="idCapitulo" value="<?php echo $capitulo ? htmlspecialchars($capitulo['IdCapitulo']) : ''; ?>">
 
-        <div class="col-md-4">
-            <label for="validationCustom01" class="form-label">
-                <h5>Titulo</h5>
-            </label>
-            <input type="text" class="form-control" id="txtitulo" name="txtitulo" value="" required placeholder="Ingresar titulo del manga (Max. 255 caracteres)">
-            <div class="valid-feedback">
-                Bien!
-            </div>
-        </div>
-        <div class="col-md-4">
-            <label for="validationCustom02" class="form-label">
-                <h5>Portada</h5>
-            </label>
-            <input type="text" class="form-control" id="txtportada" name="txtportada" value="" required placeholder="Ingresar enlace de la portada">
-            <small class="form-text text-muted">Por favor revisar la nube -> <a href="https://www.dropbox.com/home/Tatsu"><i class="fa-solid fa-cloud-arrow-up"></i></a></small>
-        </div>
-        <div class="col-md-4">
-            <label for="validationCustom04" class="form-label">
-                <h5>Etiquetas</h5>
-            </label>
-            <?php foreach ($etiquetas as $etiqueta) { ?>
-                <div class="form-check">
-                    <!-- Utilizamos el ID de la etiqueta como valor del checkbox -->
-                    <input class="form-check-input" type="checkbox" value="<?php echo $etiqueta['id']; ?>" id="etiqueta_<?php echo $etiqueta['id']; ?>" name="etiquetas[]">
-                    <label class="form-check-label" for="etiqueta_<?php echo $etiqueta['id']; ?>">
-                        <?php echo $etiqueta['nombre']; ?>
-                    </label>
+    <div class="row justify-content-center">
+        <div class="row align-items-md-stretch text-center">
+            <div class="col-md-12">
+                <div class="h-100 p-5 text-white bg-dark border rounded-3">
+                    <h2>Actualizar Capítulo</h2>
+                    <hr>
                 </div>
-            <?php } ?>
-            <div class="invalid-feedback">
-                Please select a valid state.
             </div>
         </div>
-        <div class="col-md-6">
-            <label for="exampleTextarea" class="form-label mt-4">
-                <h5>Descripción</h5>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-7 mb-3">
+            <label for="selectManga" class="form-label">
+                <h5>Manga</h5>
             </label>
-            <textarea class="form-control" id="txtareadescripcion" name="txtareadescripcion" rows="3" placeholder="Indique la trama del manga (max. 1000 caracteres)"></textarea>
-            <div class="invalid-feedback">
-                Por favor coloque una descripción
-            </div>
+            <select class="form-select" id="selectManga" required name="idManga">
+                <option selected disabled value="">Seleccionar Manga...</option>
+                <?php foreach ($Mangas as $Manga) { ?>
+                    <option value="<?php echo $Manga['IdManga']; ?>" <?php echo ($capitulo && $capitulo['IdManga'] == $Manga['IdManga']) ? 'selected' : ''; ?>><?php echo $Manga['Titulo']; ?></option>
+                <?php } ?>
+            </select>
         </div>
+    </div>
 
-
-        
-        <div class="col-12 mt-5">
-            <button class="btn btn-primary" type="submit">Agregar nuevo manga</button>
+    <div class="row justify-content-center">
+        <div class="col-md-7 mb-3">
+            <label for="numeroCapitulo" class="form-label">
+                <h5>Orden de Capítulo</h5>
+            </label>
+            <input type="number" class="form-control" id="numeroCapitulo" name="numeroCapitulo" required placeholder="Ingresar número de capítulo" value="<?php echo $capitulo ? htmlspecialchars($capitulo['Orden']) : ''; ?>">
         </div>
-    </form>
+    </div>
 
+    <div class="row justify-content-center">
+        <div class="col-md-7 mb-3">
+            <label for="tituloCapitulo" class="form-label">
+                <h5>Título del Capítulo</h5>
+            </label>
+            <input type="text" class="form-control" id="tituloCapitulo" name="tituloCapitulo" required placeholder="Ingresar título del capítulo" value="<?php echo $capitulo ? htmlspecialchars($capitulo['NombreCapitulo']) : ''; ?>">
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-2 mt-5">
+            <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+        </div>
+    </div>
+</form>
 
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

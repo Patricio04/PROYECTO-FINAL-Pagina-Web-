@@ -3,7 +3,7 @@
 $serverName = "localhost"; 
 $username = "root"; 
 $password = ""; 
-$database = "tatsudatabase2"; 
+$database = "tatsudatabase"; 
 
 $conn = mysqli_connect($serverName, $username, $password, $database);
 
