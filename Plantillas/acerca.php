@@ -16,7 +16,7 @@ include './Header.php';
                     <p class="name">Patricio Loredo Navarro</p>
                 </div>
                 <div class="person">
-                    <img src="foto-colega.jpg" alt="Foto del nombre de tu colega" class="photo">
+                    <img src="../Img/foto.jpg" alt="Foto del nombre de tu colega" class="photo">
                     <p class="name">Luis Angel Acevedo Silva</p>
                 </div>
             </div>

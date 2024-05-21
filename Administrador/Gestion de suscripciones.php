@@ -63,11 +63,13 @@ if ($resultado->num_rows > 0) {
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-book m-2"></i>Contenido
                             </a>
-                            <ul class="dropdown-menu hidden">
+                            <ul class="dropdown-menu show">
                                 <li><a class="dropdown-item" href="./Gestion-de-mangas.php"><i class="fa-solid fa-book m-2"></i>Gestion de mangas</a></li>
-                                <li><a class="dropdown-item" href="./Gestion de suscripciones.php"><i class="fa-solid fa-book m-2"></i>Gestion de suscripciones</a></li>
+                                <li><a class="dropdown-item" href="./Gestion de suscripciones.php"><i class="fa-solid fa-book m-2"></i>Gestion de suscripciones<i class="fa-solid fa-caret-left m-2"></i></a></li>
                                 <hr class="dropdown-divider">
                                 <li><a class="dropdown-item" href="./Gestion de etiquetas.php"><i class="fa-solid fa-book m-2"></i>Gestion de etiquetas</a></li>
+                                <li><a class="dropdown-item" href="./Gestion de capitulos.php"><i class="fa-solid fa-book m-2"></i>Gestion de capitulos</a></li>
+                                <li><a class="dropdown-item" href="./Gestion de contenidocapitulos.php"><i class="fa-solid fa-book m-2"></i>Gestión de contenidos</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -81,7 +83,7 @@ if ($resultado->num_rows > 0) {
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-item text-decoration-none" href="#"><i class="fa-solid fa-gem m-2"></i><strong>Planes</strong><i class="fa-solid fa-caret-left m-2"></i></a>
+                            <a class="nav-item text-decoration-none" href="#"><i class="fa-solid fa-gem m-2"></i>Planes</a>
                         </li>
                     </ul>
                     <form class="d-flex mt-3">
@@ -99,14 +101,15 @@ if ($resultado->num_rows > 0) {
             <div class="row align-items-md-stretch text-center">
                 <div class="col-md-12">
                     <div class="h-100 p-5 text-white bg-dark border rounded-3">
-                        <h2>Gestion de reportes financieros</h2>
+                        <h2>Gestion de suscripciones</h2>
                         <hr>
                         <p>
 
                         </p>
 
-                        <a class="btn btn-outline-primary " type="button" href="../Administrador/Gestion de planes formulario.php"> <i class="fa-solid fa-square-plus fa-xl m-2"></i>Generar nuevo reporte</a>
-
+                       <!-- 
+                        <a class="btn btn-outline-primary " type="button" href="../Administrador/Gestion de suscripciones formulario.php"> <i class="fa-solid fa-square-plus fa-xl m-2"></i>Generar nueva suscripcion</a>
+                        -->
                     </div>
                 </div>
 
