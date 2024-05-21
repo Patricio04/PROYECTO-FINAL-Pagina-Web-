@@ -219,12 +219,7 @@ body{
     color: black;
   }
   
-.carrusel-mangas{
 
-   display: grid;
-   grid-template-columns: minmax(100px,1fr)  ;
-   
-}
 
 .card.shadow-sm.position-relative {
     max-width: 350px; /* Ancho máximo de la tarjeta */
@@ -518,15 +513,11 @@ margin-top: 400px;
         flex-direction: column;
     }
 
-    .carousel-wrapper {
-        order: 2; /* Cambiar el orden del carrusel para que aparezca después en dispositivos móviles */
-    }
+
 
 
     
-.container-wrapper {
-    display: flex;
-}
+
 
 .manga-section {
     flex: 1; /* La sección de mangas ocupa el espacio restante */
@@ -534,7 +525,7 @@ margin-top: 400px;
 }
 
 .container-fluidd{
-    position: sticky;
+ 
     bottom: 100px;
    
 }
@@ -567,9 +558,10 @@ margin-top: 400px;
     max-width: auto; 
     width: 100vw;;
  max-height: 355px;
-    margin: 0 auto; 
-    position: absolute; 
+
     overflow: hidden; 
+    position: relative;
+    right: 100px;
   }
 
 /* Estilos que se aplican a las cards y sus atributos*/
