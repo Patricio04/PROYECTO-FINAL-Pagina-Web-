@@ -107,8 +107,9 @@ if ($resultado->num_rows > 0) {
 
                         </p>
 
+                       <!-- 
                         <a class="btn btn-outline-primary " type="button" href="../Administrador/Gestion de suscripciones formulario.php"> <i class="fa-solid fa-square-plus fa-xl m-2"></i>Generar nueva suscripcion</a>
-
+                        -->
                     </div>
                 </div>
 
