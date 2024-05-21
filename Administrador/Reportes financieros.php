@@ -55,6 +55,7 @@ require '../Assets/Bases de datos/db.php';
                                 <hr class="dropdown-divider">
                                 <li><a class="dropdown-item" href="./Gestion de etiquetas.php"><i class="fa-solid fa-book m-2"></i>Gestion de etiquetas</a></li>
                                 <li><a class="dropdown-item" href="./Gestion de capitulos.php"><i class="fa-solid fa-book m-2"></i>Gestion de capitulos</a></li>
+                                <li><a class="dropdown-item" href="./Gestion de contenidocapitulos.php"><i class="fa-solid fa-book m-2"></i>Gestión de contenidos</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -69,7 +70,7 @@ require '../Assets/Bases de datos/db.php';
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-item text-decoration-none" href="#"><i class="fa-solid fa-gem m-2"></i><strong>Planes</strong><i class="fa-solid fa-caret-left m-2"></i></a>
+                            <a class="nav-item text-decoration-none" href="./Gestion de planes.php"><i class="fa-solid fa-gem m-2"></i>Planes</a>
                         </li>
                     </ul>
                     <form class="d-flex mt-3">
